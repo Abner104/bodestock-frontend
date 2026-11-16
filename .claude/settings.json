@@ -1,0 +1,31 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx playwright *)",
+      "PowerShell(pm2 restart all 2>&1)",
+      "PowerShell(Get-Process -Name node -ErrorAction SilentlyContinue)",
+      "PowerShell(Get-Process -Id 5896, 36028)",
+      "PowerShell(wmic process where \"name='node.exe'\" get ProcessId, CommandLine 2>$null)",
+      "PowerShell(Get-WmiObject Win32_Process -Filter \"name = 'node.exe'\")",
+      "Bash(grep -r \"messaging\\\\|FCM\\\\|vapid\\\\|VITE_FIREBASE_VAPID\" src/ --include=\"*.js\" --include=\"*.jsx\" --include=\"*.ts\" -l)",
+      "Bash(grep \"VAPID\\\\|messaging\" .env)",
+      "Bash(Get-ChildItem -Path src -Recurse -Name)",
+      "PowerShell(Get-Process -Name \"node\" -ErrorAction SilentlyContinue)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://api.bodestock.cl/health)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://api.bodestock.cl)",
+      "Bash(nslookup api.bodestock.cl)",
+      "PowerShell(scp \"C:\\\\Users\\\\Ultrabook\\\\planilla-costos\\\\planilla-costos-backend\\\\routes\\\\dte.js\" root@187.77.207.36:/opt/stockly-backend/routes/dte.js)",
+      "Bash(firebase deploy *)",
+      "PowerShell(\\(Get-Content \"c:\\\\Users\\\\Ultrabook\\\\planilla-costos\\\\src\\\\pages\\\\SuperAdminGestion.jsx\"\\).Count)",
+      "Bash(find /opt/stockly-backend -name \"*.js\" | xargs grep -l \"mercadopago\\\\|mercado_pago\\\\|payment\\\\|webhook\" 2>/dev/null | head -20)",
+      "Read(//opt/**)",
+      "Bash(pm2 list *)",
+      "Bash(ssh root@187.77.207.36 \"pm2 list && echo '---' && pm2 info stockly-backend 2>/dev/null | grep -i 'script\\\\|path\\\\|root'\")",
+      "Bash(ssh root@187.77.207.36 \"cd /opt/stockly-backend && node -e \\\\\"require\\('dotenv'\\).config\\(\\); console.log\\('SECRET:', process.env.MERCADOPAGO_WEBHOOK_SECRET?.substring\\(0,10\\) + '...' + process.env.MERCADOPAGO_WEBHOOK_SECRET?.slice\\(-6\\)\\);\\\\\"\")",
+      "PowerShell($env:GOOGLE_APPLICATION_CREDENTIALS = \"\"; $env:FIREBASE_TOKEN = \\(Get-Content \"$env:APPDATA\\\\firebase\\\\config\" -Raw 2>$null\\); node \"C:\\\\Users\\\\Ultrabook\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-Ultrabook-planilla-costos\\\\29269204-4c45-4480-b19b-20e8fa0cda60\\\\scratchpad\\\\fix-balerina.js\" 2>&1)",
+      "PowerShell(\\(Get-Content \"c:\\\\Users\\\\Ultrabook\\\\planilla-costos\\\\src\\\\pages\\\\Dashboard.jsx\"\\).Count)",
+      "PowerShell(Rename-Item \"c:\\\\Users\\\\Ultrabook\\\\planilla-costos\\\\fix-exit-customer.js\" \"fix-exit-customer.cjs\")",
+      "Bash(awk 'NR>=2130 && NR<=2500 && /^          \\\\\\)\\\\}/ {print NR\": \"$0}' src/pages/InventoryExit.jsx)"
+    ]
+  }
+}

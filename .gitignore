@@ -1,0 +1,59 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Environment variables (NUNCA subir esto a Git)
+.env
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# --- Secretos y credenciales ---
+.env
+.env.*
+!.env.example
+functions/service-account.json
+**/service-account.json
+**/firebase-service-account.json
+
+# --- Basura / temporales ---
+nul
+tmpclaude-*
+__pycache__/
+*.pyc
+scratch/
+.reference/
+.firebase/
+UsersUltrabook.claudescratchmodels-data.js
+cUsersUltrabookplanilla-costosfirestore.rules
+
+# --- Archivos pesados / de prueba ---
+*.pdf
+*.xlsx
+datos-prueba-bar.csv
+
+# --- Backend (tiene su propio repo) ---
+planilla-costos-backend/
+node_modules/
+functions/node_modules/
+
+# Credenciales del VPS en texto plano
+vps_ssh.py

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stockly - Template Productos Botillería</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #111827 50%, #1f2937 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      color: #1f2937;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 30px;
+      font-size: 1.1rem;
+    }
+
+    .brand {
+      color: #3B82F6;
+      font-weight: bold;
+    }
+
+    .instructions {
+      background: #f3f4f6;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      border-left: 4px solid #3B82F6;
+    }
+
+    .instructions h2 {
+      color: #1f2937;
+      margin-top: 0;
+      font-size: 1.3rem;
+    }
+
+    .instructions ol {
+      margin: 15px 0;
+      padding-left: 20px;
+    }
+
+    .instructions li {
+      margin: 10px 0;
+      color: #374151;
+      line-height: 1.6;
+    }
+
+    .example-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 0.9rem;
+    }
+
+    .example-table th,
+    .example-table td {
+      border: 1px solid #e5e7eb;
+      padding: 12px;
+      text-align: left;
+    }
+
+    .example-table th {
+      background: #3B82F6;
+      color: white;
+      font-weight: 600;
+    }
+
+    .example-table tr:nth-child(even) {
+      background: #f9fafb;
+    }
+
+    .download-btn {
+      background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #93C5FD 100%);
+      color: white;
+      border: none;
+      padding: 18px 40px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.4);
+      width: 100%;
+      margin-top: 20px;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(59, 130, 246, 0.6);
+    }
+
+    .download-btn:active {
+      transform: translateY(0);
+    }
+
+    .tips {
+      background: #fef3c7;
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 30px;
+      border-left: 4px solid #f59e0b;
+    }
+
+    .tips h3 {
+      color: #92400e;
+      margin-top: 0;
+      font-size: 1.1rem;
+    }
+
+    .tips ul {
+      margin: 10px 0;
+      padding-left: 20px;
+    }
+
+    .tips li {
+      color: #78350f;
+      margin: 8px 0;
+      line-height: 1.5;
+    }
+
+    .highlight {
+      background: #dbeafe;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+      color: #1e40af;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📦 Template de Productos para <span class="brand">Stockly</span></h1>
+    <p class="subtitle">Plantilla Excel para importar productos de botillería</p>
+
+    <div class="instructions">
+      <h2>📋 Instrucciones de uso</h2>
+      <ol>
+        <li><strong>Descarga el template:</strong> Haz clic en el botón de abajo para descargar el archivo Excel.</li>
+        <li><strong>Completa los datos:</strong> Abre el archivo y llena cada fila con la información de tus productos.</li>
+        <li><strong>Guarda el archivo:</strong> Una vez completado, guárdalo en tu computador.</li>
+        <li><strong>Importa a Stockly:</strong> En la aplicación, ve a "Productos" > "Importar desde Excel" y carga tu archivo.</li>
+      </ol>
+    </div>
+
+    <h3 style="color: #1f2937; margin-top: 30px;">Ejemplo de cómo llenar el template:</h3>
+
+    <table class="example-table">
+      <thead>
+        <tr>
+          <th>Código</th>
+          <th>Nombre</th>
+          <th>Categoría</th>
+          <th>Precio Compra</th>
+          <th>Precio Venta</th>
+          <th>Stock Inicial</th>
+          <th>Stock Mínimo</th>
+          <th>Proveedor</th>
+          <th>Unidad</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>001</td>
+          <td>Cerveza Cristal 1L</td>
+          <td>Cervezas</td>
+          <td>1200</td>
+          <td>1800</td>
+          <td>48</td>
+          <td>10</td>
+          <td>CCU</td>
+          <td>Unidad</td>
+        </tr>
+        <tr>
+          <td>002</td>
+          <td>Pisco Capel 35° 750ml</td>
+          <td>Licores</td>
+          <td>4500</td>
+          <td>6500</td>
+          <td>12</td>
+          <td>5</td>
+          <td>Cooperativa Capel</td>
+          <td>Unidad</td>
+        </tr>
+        <tr>
+          <td>003</td>
+          <td>Vino Casillero del Diablo</td>
+          <td>Vinos</td>
+          <td>3200</td>
+          <td>4800</td>
+          <td>24</td>
+          <td>6</td>
+          <td>Concha y Toro</td>
+          <td>Unidad</td>
+        </tr>
+        <tr>
+          <td>004</td>
+          <td>Coca Cola 2L</td>
+          <td>Bebidas</td>
+          <td>800</td>
+          <td>1500</td>
+          <td>36</td>
+          <td>12</td>
+          <td>Coca Cola Company</td>
+          <td>Unidad</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tips">
+      <h3>💡 Consejos importantes</h3>
+      <ul>
+        <li><strong>Código:</strong> Puedes usar números simples (001, 002, 003...) o el código de barras si lo tienes.</li>
+        <li><strong>Categorías sugeridas:</strong> Cervezas, Vinos, Licores, Bebidas, Energéticas, Snacks, Hielo.</li>
+        <li><strong>Precios:</strong> Ingresa solo números, sin puntos ni símbolos de peso ($).</li>
+        <li><strong>Stock Mínimo:</strong> Cantidad bajo la cual <span class="highlight">Stockly te alertará</span> para que repongas.</li>
+        <li><strong>No dejes celdas vacías:</strong> Si no tienes un dato, escribe "Sin dato" o un guión (-).</li>
+      </ul>
+    </div>
+
+    <button class="download-btn" onclick="downloadTemplate()">
+      📥 Descargar Template Excel
+    </button>
+
+    <p style="text-align: center; color: #6b7280; margin-top: 30px; font-size: 0.9rem;">
+      ¿Necesitas ayuda? Contáctanos en soporte@stockly.com
+    </p>
+  </div>
+
+  <script>
+    function downloadTemplate() {
+      // Crear datos del template
+      const data = [
+        ['Código', 'Nombre', 'Categoría', 'Precio Compra', 'Precio Venta', 'Stock Inicial', 'Stock Mínimo', 'Proveedor', 'Unidad'],
+        ['001', 'Cerveza Cristal 1L', 'Cervezas', 1200, 1800, 48, 10, 'CCU', 'Unidad'],
+        ['002', 'Pisco Capel 35° 750ml', 'Licores', 4500, 6500, 12, 5, 'Cooperativa Capel', 'Unidad'],
+        ['003', 'Vino Casillero del Diablo Cabernet', 'Vinos', 3200, 4800, 24, 6, 'Concha y Toro', 'Unidad'],
+        ['004', 'Coca Cola 2L', 'Bebidas', 800, 1500, 36, 12, 'Coca Cola Company', 'Unidad'],
+        ['005', 'Red Bull 250ml', 'Energéticas', 900, 1500, 24, 8, 'Red Bull', 'Unidad'],
+        ['', '', '', '', '', '', '', '', ''],
+        ['', '← AGREGA TUS PRODUCTOS AQUÍ', '', '', '', '', '', '', ''],
+      ];
+
+      // Crear workbook
+      const wb = XLSX.utils.book_new();
+      const ws = XLSX.utils.aoa_to_sheet(data);
+
+      // Configurar anchos de columna
+      ws['!cols'] = [
+        { wch: 10 },  // Código
+        { wch: 35 },  // Nombre
+        { wch: 15 },  // Categoría
+        { wch: 15 },  // Precio Compra
+        { wch: 15 },  // Precio Venta
+        { wch: 15 },  // Stock Inicial
+        { wch: 15 },  // Stock Mínimo
+        { wch: 25 },  // Proveedor
+        { wch: 12 },  // Unidad
+      ];
+
+      // Aplicar estilos al header
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      for (let C = range.s.c; C <= range.e.c; ++C) {
+        const address = XLSX.utils.encode_col(C) + "1";
+        if (!ws[address]) continue;
+        ws[address].s = {
+          font: { bold: true, color: { rgb: "FFFFFF" } },
+          fill: { fgColor: { rgb: "3B82F6" } },
+          alignment: { horizontal: "center", vertical: "center" }
+        };
+      }
+
+      // Agregar hoja al workbook
+      XLSX.utils.book_append_sheet(wb, ws, "Productos");
+
+      // Descargar
+      XLSX.writeFile(wb, "Stockly_Template_Productos_Botilleria.xlsx");
+    }
+  </script>
+</body>
+</html>

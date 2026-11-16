@@ -1,0 +1,938 @@
+[
+  {
+    "productId": "1JAMEuUkh4qAa0wmAeb6",
+    "name": "Bolsa 50x70",
+    "stockActual": 53,
+    "removedEntries": [
+      {
+        "id": "1788111145673",
+        "date": "2026-08-30T17:32:25.673Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 24,
+    "historyLengthAfter": 23
+  },
+  {
+    "productId": "1bDadal72JBRuM4bm344",
+    "name": "Escoba virutex",
+    "stockActual": 3,
+    "removedEntries": [
+      {
+        "id": "1788114111342",
+        "date": "2026-08-30T18:21:51.342Z",
+        "type": "shrinkage",
+        "qty": 3,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 5,
+    "historyLengthAfter": 4
+  },
+  {
+    "productId": "27FqV7cYt6JXZdBBY6PI",
+    "name": "Esponjas de colores",
+    "stockActual": 50,
+    "removedEntries": [
+      {
+        "id": "mtg5m8gn",
+        "date": "2026-08-30T18:39:52.151Z",
+        "qty": 50,
+        "price": 120,
+        "totalPrice": 6000,
+        "ppp": 120,
+        "by": "inicial"
+      }
+    ],
+    "historyLengthBefore": 1,
+    "historyLengthAfter": 0
+  },
+  {
+    "productId": "31FW6Fr4yr38PIcB8Ctf",
+    "name": "Vanish polvo",
+    "stockActual": 24,
+    "removedEntries": [
+      {
+        "id": "1788119511518",
+        "date": "2026-08-30T19:51:51.518Z",
+        "type": "shrinkage",
+        "qty": 2,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 30,
+    "historyLengthAfter": 29
+  },
+  {
+    "productId": "3Q0yCpcIibemk6rgFdEl",
+    "name": "Vanish líquido blanco",
+    "stockActual": 75,
+    "removedEntries": [
+      {
+        "id": "1788119214837",
+        "date": "2026-08-30T19:46:54.837Z",
+        "type": "shrinkage",
+        "qty": 2,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 17,
+    "historyLengthAfter": 16
+  },
+  {
+    "productId": "3tdiu1wSweVczHlpAfTz",
+    "name": "whiskas pavo",
+    "stockActual": 0,
+    "removedEntries": [
+      {
+        "id": "1788119870169",
+        "date": "2026-08-30T19:57:50.169Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 10,
+    "historyLengthAfter": 9
+  },
+  {
+    "productId": "5YnctneNW2zQthzSopjm",
+    "name": "Desodorante inodoro teddy",
+    "stockActual": 7,
+    "removedEntries": [
+      {
+        "id": "mtg4bpyj",
+        "date": "2026-08-30T18:03:41.995Z",
+        "qty": 7,
+        "price": 690,
+        "totalPrice": 4830,
+        "ppp": 690,
+        "by": "inicial"
+      }
+    ],
+    "historyLengthBefore": 1,
+    "historyLengthAfter": 0
+  },
+  {
+    "productId": "5sEJj8ASH7SVoqKSTNuh",
+    "name": "Esponjas de colores lisa",
+    "stockActual": 100,
+    "removedEntries": [
+      {
+        "id": "1788115234160",
+        "date": "2026-08-30T18:40:34.160Z",
+        "type": "shrinkage",
+        "qty": 10,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 5,
+    "historyLengthAfter": 4
+  },
+  {
+    "productId": "61leB94oRiRWphId8Apv",
+    "name": "Cloro live",
+    "stockActual": 2,
+    "removedEntries": [
+      {
+        "id": "1788111966317",
+        "date": "2026-08-30T17:46:06.317Z",
+        "type": "shrinkage",
+        "qty": 6,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 94,
+    "historyLengthAfter": 93
+  },
+  {
+    "productId": "7cXihAGd01WusYE01i47",
+    "name": "Wyn crema 750 ml",
+    "stockActual": 3,
+    "removedEntries": [
+      {
+        "id": "1788119918609",
+        "date": "2026-08-30T19:58:38.609Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 13,
+    "historyLengthAfter": 12
+  },
+  {
+    "productId": "BFgybL7M4sqscKMKWfil",
+    "name": "Rexona barra bamboo",
+    "stockActual": 8,
+    "removedEntries": [
+      {
+        "id": "1788118076489",
+        "date": "2026-08-30T19:27:56.489Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 8,
+    "historyLengthAfter": 7
+  },
+  {
+    "productId": "BfNGgbd3UIbofcGBsAcs",
+    "name": "Rexona barra emotion",
+    "stockActual": 7,
+    "removedEntries": [
+      {
+        "id": "1788118093158",
+        "date": "2026-08-30T19:28:13.158Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 10,
+    "historyLengthAfter": 9
+  },
+  {
+    "productId": "H9IagtoQCFeS1XXdvp8p",
+    "name": "Jabón protex aloe",
+    "stockActual": 16,
+    "removedEntries": [
+      {
+        "id": "1788116020945",
+        "date": "2026-08-30T18:53:40.945Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 51,
+    "historyLengthAfter": 50
+  },
+  {
+    "productId": "HqX1OlOh4gpw4oxZo7jE",
+    "name": "Atún van camps en aceite",
+    "stockActual": 53,
+    "removedEntries": [
+      {
+        "id": "1788110657026",
+        "date": "2026-08-30T17:24:17.026Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 9,
+    "historyLengthAfter": 8
+  },
+  {
+    "productId": "IeZuwGHQqRX9LZQKlnWG",
+    "name": "Omo bicarbonato",
+    "stockActual": 12,
+    "removedEntries": [
+      {
+        "id": "1788116993038",
+        "date": "2026-08-30T19:09:53.038Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 8,
+    "historyLengthAfter": 7
+  },
+  {
+    "productId": "J9AWyttraT4MuO4YKt7a",
+    "name": "Protectores nosotras",
+    "stockActual": 2,
+    "removedEntries": [
+      {
+        "id": "1788117879849",
+        "date": "2026-08-30T19:24:39.849Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 25,
+    "historyLengthAfter": 24
+  },
+  {
+    "productId": "JHqTLm3hJLIIJhTRFo1P",
+    "name": "Jabón palmolive frambuesa",
+    "stockActual": 16,
+    "removedEntries": [
+      {
+        "id": "1788115943585",
+        "date": "2026-08-30T18:52:23.585Z",
+        "type": "shrinkage",
+        "qty": 2,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 21,
+    "historyLengthAfter": 20
+  },
+  {
+    "productId": "KmXfWEwY7xldRCEJ5ovQ",
+    "name": "Detergente live perlado rosado",
+    "stockActual": 11,
+    "removedEntries": [
+      {
+        "id": "1788113616173",
+        "date": "2026-08-30T18:13:36.173Z",
+        "type": "shrinkage",
+        "qty": 6,
+        "reason": "vencido",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 77,
+    "historyLengthAfter": 76
+  },
+  {
+    "productId": "Koct3RQkh66z7Yyc9gUh",
+    "name": "Rexona spray invisible",
+    "stockActual": 6,
+    "removedEntries": [
+      {
+        "id": "1788118218556",
+        "date": "2026-08-30T19:30:18.556Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 10,
+    "historyLengthAfter": 9
+  },
+  {
+    "productId": "Nvb3lQSZXra66O8JIZ6k",
+    "name": "Esponjas acanaladas",
+    "stockActual": 204,
+    "removedEntries": [
+      {
+        "id": "mtg5hd3g",
+        "date": "2026-08-30T18:36:04.876Z",
+        "qty": 204,
+        "price": 90,
+        "totalPrice": 18360,
+        "ppp": 90,
+        "by": "inicial"
+      }
+    ],
+    "historyLengthBefore": 1,
+    "historyLengthAfter": 0
+  },
+  {
+    "productId": "OFonttFZTF9JitwXm35v",
+    "name": "Bolsa 70x90",
+    "stockActual": 7,
+    "removedEntries": [
+      {
+        "id": "mtg3ezfv",
+        "date": "2026-08-30T17:38:14.635Z",
+        "qty": 7,
+        "price": 680,
+        "totalPrice": 4760,
+        "ppp": 680,
+        "by": "inicial"
+      }
+    ],
+    "historyLengthBefore": 1,
+    "historyLengthAfter": 0
+  },
+  {
+    "productId": "OgQ749h1ijTGchNpmOFo",
+    "name": "Jabón dove barra pink",
+    "stockActual": 38,
+    "removedEntries": [
+      {
+        "id": "1788115761076",
+        "date": "2026-08-30T18:49:21.076Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 22,
+    "historyLengthAfter": 21
+  },
+  {
+    "productId": "SPfTuS1XzKdjwg5WGpaR",
+    "name": "Nosotras nocturna",
+    "stockActual": 20,
+    "removedEntries": [
+      {
+        "id": "1788116858383",
+        "date": "2026-08-30T19:07:38.383Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 44,
+    "historyLengthAfter": 43
+  },
+  {
+    "productId": "T7PDsGgnAIfOPvxWJLaI",
+    "name": "Lavaloza virginia 500 ml",
+    "stockActual": 6,
+    "removedEntries": [
+      {
+        "id": "1788116264404",
+        "date": "2026-08-30T18:57:44.404Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 6,
+    "historyLengthAfter": 5
+  },
+  {
+    "productId": "TLEtj8Dac3yviMV9pQ50",
+    "name": "Atún san José aceite",
+    "stockActual": 255,
+    "removedEntries": [
+      {
+        "id": "1788110562135",
+        "date": "2026-08-30T17:22:42.135Z",
+        "type": "shrinkage",
+        "qty": 2,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 23,
+    "historyLengthAfter": 22
+  },
+  {
+    "productId": "TppuBPebTiFSIQqlwe2S",
+    "name": "Acondicionador balerina volumen",
+    "stockActual": 50,
+    "removedEntries": [
+      {
+        "id": "1788108289984",
+        "date": "2026-08-30T16:44:49.984Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 7,
+    "historyLengthAfter": 6
+  },
+  {
+    "productId": "WH9Ss3CChZgpcfrxOvBK",
+    "name": "Champú balerina largo increible",
+    "stockActual": 11,
+    "removedEntries": [
+      {
+        "id": "1788111749712",
+        "date": "2026-08-30T17:42:29.712Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 23,
+    "historyLengthAfter": 22
+  },
+  {
+    "productId": "WWSOTZuBPiYSpHnMgbYY",
+    "name": "Bolsas 80x110",
+    "stockActual": 24,
+    "removedEntries": [
+      {
+        "id": "1788111620295",
+        "date": "2026-08-30T17:40:20.295Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 29,
+    "historyLengthAfter": 28
+  },
+  {
+    "productId": "WcYYNdQitTkRHNYcZEtz",
+    "name": "Colgate luminous white",
+    "stockActual": 1,
+    "removedEntries": [
+      {
+        "id": "1788112120659",
+        "date": "2026-08-30T17:48:40.659Z",
+        "type": "shrinkage",
+        "qty": 4,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 12,
+    "historyLengthAfter": 11
+  },
+  {
+    "productId": "WpHp3Q95VYLnABD9nE2S",
+    "name": "Acondicionador balerina micelar",
+    "stockActual": 46,
+    "removedEntries": [
+      {
+        "id": "1788107774645",
+        "date": "2026-08-30T16:36:14.645Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 9,
+    "historyLengthAfter": 8
+  },
+  {
+    "productId": "WwrndWMzYiaso9soV7Wv",
+    "name": "Ambiental sapolio antitabaco",
+    "stockActual": 5,
+    "removedEntries": [
+      {
+        "id": "1788108460329",
+        "date": "2026-08-30T16:47:40.329Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 4,
+    "historyLengthAfter": 3
+  },
+  {
+    "productId": "XdxIOtoUeoWNK5nIa3qY",
+    "name": "Ariel de 400 gr verde",
+    "stockActual": 21,
+    "removedEntries": [
+      {
+        "id": "1788108949084",
+        "date": "2026-08-30T16:55:49.084Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "vencido",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 12,
+    "historyLengthAfter": 11
+  },
+  {
+    "productId": "ZlipLF1xCahRhkOffI2y",
+    "name": "Ariel de 400 gr downy",
+    "stockActual": 16,
+    "removedEntries": [
+      {
+        "id": "1788108888776",
+        "date": "2026-08-30T16:54:48.776Z",
+        "type": "shrinkage",
+        "qty": 4,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 25,
+    "historyLengthAfter": 24
+  },
+  {
+    "productId": "alUdp7aQwpIhSxHtSQ0M",
+    "name": "Clorogel igenix tradicional",
+    "stockActual": 10,
+    "removedEntries": [
+      {
+        "id": "1788112063304",
+        "date": "2026-08-30T17:47:43.304Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 17,
+    "historyLengthAfter": 16
+  },
+  {
+    "productId": "aqgpKS7Fc5uWJEZ98HN4",
+    "name": "Desodorante teddy",
+    "stockActual": 3,
+    "removedEntries": [
+      {
+        "id": "mtg4f451",
+        "date": "2026-08-30T18:06:20.341Z",
+        "qty": 3,
+        "price": 690,
+        "totalPrice": 2070,
+        "ppp": 690,
+        "by": "inicial"
+      }
+    ],
+    "historyLengthBefore": 1,
+    "historyLengthAfter": 0
+  },
+  {
+    "productId": "bBjvwHLZdWast2maez8I",
+    "name": "Acondicionador balerina ondas y rizos",
+    "stockActual": 44,
+    "removedEntries": [
+      {
+        "id": "mtg1f78m",
+        "date": "2026-08-30T16:42:25.510Z",
+        "qty": 5,
+        "price": 1200,
+        "totalPrice": 6000,
+        "ppp": 1022.73,
+        "by": "manual"
+      }
+    ],
+    "historyLengthBefore": 10,
+    "historyLengthAfter": 9
+  },
+  {
+    "productId": "bS4jzKur62U0z0D7FEkv",
+    "name": "Papel de aluminio cleason",
+    "stockActual": 67,
+    "removedEntries": [
+      {
+        "id": "1788117419004",
+        "date": "2026-08-30T19:16:59.004Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "vencido",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 15,
+    "historyLengthAfter": 14
+  },
+  {
+    "productId": "e1O5EFwyn966JB8RCdKL",
+    "name": "Limpia vidrio sapolio gatillo",
+    "stockActual": 23,
+    "removedEntries": [
+      {
+        "id": "1788116613557",
+        "date": "2026-08-30T19:03:33.557Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 19,
+    "historyLengthAfter": 18
+  },
+  {
+    "productId": "fKIqG4hGcMzKPDHhz6Ta",
+    "name": "Desengrasante live",
+    "stockActual": 45,
+    "removedEntries": [
+      {
+        "id": "1788112727123",
+        "date": "2026-08-30T17:58:47.123Z",
+        "type": "shrinkage",
+        "qty": 5,
+        "reason": "dañado",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 48,
+    "historyLengthAfter": 47
+  },
+  {
+    "productId": "gJtocyKSI7MZ4xMZK9Nw",
+    "name": "Lavaloza live",
+    "stockActual": 30,
+    "removedEntries": [
+      {
+        "id": "1788116230493",
+        "date": "2026-08-30T18:57:10.493Z",
+        "type": "shrinkage",
+        "qty": 5,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 74,
+    "historyLengthAfter": 73
+  },
+  {
+    "productId": "hILVksUGhbAP51t05RYL",
+    "name": "Sopapo",
+    "stockActual": 37,
+    "removedEntries": [
+      {
+        "id": "1788118478594",
+        "date": "2026-08-30T19:34:38.594Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 9,
+    "historyLengthAfter": 8
+  },
+  {
+    "productId": "nKA6wLpZNwDTnOOGlyo3",
+    "name": "Detergente live perlado celeste",
+    "stockActual": 22,
+    "removedEntries": [
+      {
+        "id": "1788113511734",
+        "date": "2026-08-30T18:11:51.734Z",
+        "type": "shrinkage",
+        "qty": 6,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 103,
+    "historyLengthAfter": 102
+  },
+  {
+    "productId": "pKMCgihzvfJUb1BBslYd",
+    "name": "Jabón balerina crema humectante",
+    "stockActual": 10,
+    "removedEntries": [
+      {
+        "id": "1788115699049",
+        "date": "2026-08-30T18:48:19.049Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 19,
+    "historyLengthAfter": 18
+  },
+  {
+    "productId": "qdcd8yIYcDQwy8xNm7z2",
+    "name": "Atún van camps en agua",
+    "stockActual": 71,
+    "removedEntries": [
+      {
+        "id": "1788110716229",
+        "date": "2026-08-30T17:25:16.229Z",
+        "type": "shrinkage",
+        "qty": 1,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 7,
+    "historyLengthAfter": 6
+  },
+  {
+    "productId": "sq8erM4PPlxw6qvVBd7j",
+    "name": "Preservativos sensorplus",
+    "stockActual": 11,
+    "removedEntries": [
+      {
+        "id": "1788117787259",
+        "date": "2026-08-30T19:23:07.259Z",
+        "type": "shrinkage",
+        "qty": 5,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 22,
+    "historyLengthAfter": 21
+  },
+  {
+    "productId": "uGsxwJZ1Ztpff2YTosPI",
+    "name": "Arroz martino",
+    "stockActual": 14,
+    "removedEntries": [
+      {
+        "id": "mtg28sz4",
+        "date": "2026-08-30T17:05:26.704Z",
+        "qty": 14,
+        "price": 6900,
+        "totalPrice": 96600,
+        "ppp": 6900,
+        "by": "inicial"
+      }
+    ],
+    "historyLengthBefore": 1,
+    "historyLengthAfter": 0
+  },
+  {
+    "productId": "uJUwGuHfY8RYOFvPvVBV",
+    "name": "Popeye barra",
+    "stockActual": 5,
+    "removedEntries": [
+      {
+        "id": "1788117710787",
+        "date": "2026-08-30T19:21:50.787Z",
+        "type": "shrinkage",
+        "qty": 2,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 28,
+    "historyLengthAfter": 27
+  },
+  {
+    "productId": "v8t0JKRvTRZgn8FZhLoi",
+    "name": "Colgate total 12 150ml",
+    "stockActual": 9,
+    "removedEntries": [
+      {
+        "id": "1788112170851",
+        "date": "2026-08-30T17:49:30.851Z",
+        "type": "shrinkage",
+        "qty": 3,
+        "reason": "dañado",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 12,
+    "historyLengthAfter": 11
+  },
+  {
+    "productId": "xXqKEzAKaVsXz9SfQogN",
+    "name": "Desodorante teddy",
+    "stockActual": 8,
+    "removedEntries": [
+      {
+        "id": "mtg4dcv5",
+        "date": "2026-08-30T18:04:58.337Z",
+        "qty": 8,
+        "price": 690,
+        "totalPrice": 5520,
+        "ppp": 690,
+        "by": "inicial"
+      }
+    ],
+    "historyLengthBefore": 1,
+    "historyLengthAfter": 0
+  },
+  {
+    "productId": "yRDgDOQTJ3qljYF67SVb",
+    "name": "Palas negras",
+    "stockActual": 25,
+    "removedEntries": [
+      {
+        "id": "1788117169256",
+        "date": "2026-08-30T19:12:49.256Z",
+        "type": "shrinkage",
+        "qty": 4,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 14,
+    "historyLengthAfter": 13
+  },
+  {
+    "productId": "z4Ppyt510lVMCFBdHIGA",
+    "name": "Jabón balerina avena",
+    "stockActual": 2,
+    "removedEntries": [
+      {
+        "id": "1788115671482",
+        "date": "2026-08-30T18:47:51.482Z",
+        "type": "shrinkage",
+        "qty": 2,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 16,
+    "historyLengthAfter": 15
+  },
+  {
+    "productId": "zpj4noe4Uj1ZHhNRm15x",
+    "name": "Trapero blanco",
+    "stockActual": 45,
+    "removedEntries": [
+      {
+        "id": "1788119019515",
+        "date": "2026-08-30T19:43:39.515Z",
+        "type": "shrinkage",
+        "qty": 4,
+        "reason": "error_conteo",
+        "notes": "",
+        "user": "Sistema"
+      }
+    ],
+    "historyLengthBefore": 18,
+    "historyLengthAfter": 17
+  }
+]

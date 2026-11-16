@@ -1,0 +1,188 @@
+/* Estilos de la demo 3D "Ciudad de agentes" -- aislados con el prefijo
+   ciudad3d- para no chocar con Tailwind/MUI del resto de la app. */
+.ciudad3d-app {
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-t: env(safe-area-inset-top, 0px);
+  --bg: #cfdcf3; --glass: rgba(255,255,255,.78); --glass-b: rgba(255,255,255,.9);
+  --txt: #0b1530; --sub: #4b5b7c; --line: rgba(11,21,48,.12);
+  position: fixed; inset: 0; width: 100%; height: 100dvh; overflow: hidden;
+  background: var(--bg); color: var(--txt);
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  transition: background .6s, color .4s;
+}
+.ciudad3d-app * { box-sizing: border-box; }
+.ciudad3d-app button { font: inherit; cursor: pointer; border: 0; color: inherit; background: none; -webkit-tap-highlight-color: transparent; }
+.ciudad3d-app[data-night='true'] {
+  --bg: #030610; --glass: rgba(9,18,42,.78); --glass-b: rgba(30,50,100,.55);
+  --txt: #e8f0ff; --sub: #9db3dd; --line: rgba(160,190,255,.2);
+}
+.ciudad3d-app canvas { position: absolute; inset: 0; touch-action: none; }
+
+/* ---- barra superior ---- */
+.ciudad3d-barra-sup {
+  position: absolute; z-index: 30; left: 0; right: 0; top: 0; padding: calc(12px + var(--safe-t)) 16px 0;
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 12px; pointer-events: none;
+}
+.ciudad3d-barra-sup .marca, .ciudad3d-barra-sup .controles { pointer-events: auto; display: flex; align-items: center; gap: 10px; min-width: 0; }
+.ciudad3d-barra-sup .marca { flex: 1 1 auto; min-width: 0; background: var(--glass); backdrop-filter: blur(12px); border: 1px solid var(--line); border-radius: 14px; padding: 6px 12px 6px 8px; }
+.ciudad3d-barra-sup .marca img { height: 34px; width: auto; display: block; flex: none; }
+.ciudad3d-barra-sup .marca span { font-weight: 600; font-size: 14px; letter-spacing: .01em; white-space: nowrap; }
+.ciudad3d-barra-sup .controles { flex: none; }
+.ciudad3d-barra-sup .marca .salir {
+  width: 30px; height: 30px; flex: none; display: flex; align-items: center; justify-content: center;
+  border-radius: 50%; color: var(--sub); transition: background .2s, color .2s;
+}
+.ciudad3d-barra-sup .marca .salir:hover { background: var(--line); color: var(--txt); }
+.ciudad3d-barra-sup .marca .salir svg { width: 16px; height: 16px; }
+.ciudad3d-barra-sup .marca .empresa {
+  font: inherit; font-size: 12px; font-weight: 600; width: 0; min-width: 0; flex: 1 1 auto; background: var(--glass-b);
+  border: 1px solid var(--line); color: var(--txt); border-radius: 10px; padding: 5px 8px; cursor: pointer;
+  text-overflow: ellipsis; white-space: nowrap; overflow: hidden;
+}
+.ciudad3d-barra-sup .controles button {
+  min-height: 44px; min-width: 64px; padding: 0 16px; border-radius: 14px; font-weight: 600; font-size: 14px;
+  background: var(--glass); backdrop-filter: blur(12px); border: 1px solid var(--line); transition: transform .15s, background .2s;
+}
+.ciudad3d-barra-sup .controles button.on { background: #1a73ff; color: #fff; border-color: transparent; }
+.ciudad3d-barra-sup .controles button:active { transform: scale(.96); }
+
+/* ---- etiquetas 3D ---- */
+.ciudad3d-app .etiqueta {
+  --c: #2f7bff; transform: translateY(-4px); white-space: nowrap; user-select: none;
+  padding: 7px 14px; border-radius: 10px; font-weight: 700; font-size: 14px; color: #fff;
+  background: color-mix(in srgb, var(--c) 78%, #000 22%); border: 2px solid color-mix(in srgb, var(--c) 60%, #fff 40%);
+  box-shadow: 0 6px 18px rgba(0,0,0,.28); transition: transform .2s, box-shadow .2s;
+}
+.ciudad3d-app .etiqueta:hover, .ciudad3d-app .etiqueta.activa { transform: translateY(-8px) scale(1.06); box-shadow: 0 10px 26px color-mix(in srgb, var(--c) 55%, transparent); }
+.ciudad3d-app .etiqueta-estado {
+  display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px;
+  background: var(--s); box-shadow: 0 0 6px var(--s);
+}
+.ciudad3d-app .etiqueta-estado.alerta { animation: ciudad3d-estado-pulso 1s ease-in-out infinite; }
+@keyframes ciudad3d-estado-pulso { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+.ciudad3d-app .etiqueta-badge {
+  display: inline-flex; align-items: center; justify-content: center; margin-left: 6px;
+  min-width: 17px; height: 17px; padding: 0 4px; border-radius: 999px; font-size: 10.5px; font-weight: 800;
+  background: #ef4444; color: #fff; box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 78%, #000 22%);
+  animation: ciudad3d-pulso 1.6s ease-in-out infinite;
+}
+@keyframes ciudad3d-pulso { 0%, 100% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 78%, #000 22%), 0 0 0 0 rgba(239,68,68,.6); } 50% { box-shadow: 0 0 0 2px color-mix(in srgb, var(--c) 78%, #000 22%), 0 0 0 5px rgba(239,68,68,0); } }
+
+/* ---- panel de agente ---- */
+.ciudad3d-panel {
+  --c: #2f7bff; position: absolute; z-index: 40; background: var(--glass); backdrop-filter: blur(16px);
+  border: 1px solid var(--line); border-top: 4px solid var(--c); box-shadow: 0 20px 60px rgba(0,0,0,.28);
+  padding: 20px 20px 16px; overflow: auto; animation: ciudad3d-entra .35s cubic-bezier(.2,.8,.2,1);
+}
+.ciudad3d-panel.lado { right: 20px; top: calc(76px + var(--safe-t)); bottom: 88px; width: min(420px, 42vw); border-radius: 22px; }
+.ciudad3d-panel.hoja { left: 10px; right: 10px; bottom: calc(76px + var(--safe-b)); max-height: 52dvh; border-radius: 22px; padding: 16px; }
+@keyframes ciudad3d-entra { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+.ciudad3d-panel .cerrar { position: absolute; top: 10px; right: 10px; width: 44px; height: 44px; border-radius: 50%; font-size: 28px; line-height: 1; color: var(--sub); }
+.ciudad3d-panel .cab { display: flex; gap: 12px; align-items: flex-start; padding-right: 40px; }
+.ciudad3d-panel .punto { width: 14px; height: 14px; border-radius: 50%; background: var(--c); box-shadow: 0 0 14px var(--c); margin-top: 8px; flex: none; }
+.ciudad3d-panel h2 { margin: 0; font-size: 24px; line-height: 1.1; }
+.ciudad3d-panel .frase { margin: 4px 0 0; color: var(--sub); font-size: 14px; }
+.ciudad3d-panel .kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 16px 0 6px; }
+.ciudad3d-panel .kpi { background: var(--glass-b); border: 1px solid var(--line); border-radius: 14px; padding: 10px; display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ciudad3d-panel .kpi small { color: var(--sub); font-size: 11px; line-height: 1.2; }
+.ciudad3d-panel .kpi b { font-size: clamp(14px, 1.5vw, 16px); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.ciudad3d-panel .kpi em { font-style: normal; font-size: 12px; font-weight: 600; color: var(--c); }
+.ciudad3d-panel h3 { margin: 16px 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: .08em; color: var(--sub); }
+.ciudad3d-panel ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; line-height: 1.4; }
+.ciudad3d-panel .acciones { margin-top: 16px; display: grid; gap: 10px; }
+.ciudad3d-panel .primario { min-height: 48px; border-radius: 14px; font-weight: 700; color: #fff; background: var(--c); box-shadow: 0 8px 22px color-mix(in srgb, var(--c) 45%, transparent); }
+.ciudad3d-panel .otros { display: flex; flex-wrap: wrap; gap: 6px; }
+.ciudad3d-panel .otros button { min-height: 36px; padding: 0 12px; border-radius: 999px; font-size: 13px; border: 1px solid color-mix(in srgb, var(--c) 60%, transparent); }
+.ciudad3d-panel .nota { display: block; margin-top: 12px; color: var(--sub); font-size: 11px; }
+
+/* ---- pestañas Resumen / Hablar y tareas ---- */
+.ciudad3d-panel .tabs { display: flex; gap: 6px; margin: 14px 0 4px; padding: 3px; background: var(--glass-b); border: 1px solid var(--line); border-radius: 12px; }
+.ciudad3d-panel .tabs button { flex: 1; min-height: 34px; border-radius: 9px; font-size: 12.5px; font-weight: 600; color: var(--sub); transition: background .2s, color .2s; }
+.ciudad3d-panel .tabs button.act { background: var(--c); color: #fff; }
+
+/* ---- contenido de chat/tareas (AgentAlertsContent): tarjeta oscura fija
+   dentro del panel -- ese componente está diseñado en Tailwind oscuro
+   (text-zinc-200, bg-white/[0.06]...) pensado para el admin; en vez de
+   pelear por adaptar cada clase al tema claro/oscuro de la ciudad, se
+   aloja como una "sub-tarjeta" oscura consistente con su diseño original. */
+.ciudad3d-contenido-chat {
+  margin-top: 14px; padding: 14px; border-radius: 16px;
+  background: linear-gradient(165deg, #16171f 0%, #0e0f15 100%);
+  border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+  /* Fuerza un color base claro para TODO lo de adentro, sin esperar a que
+     cada clase Tailwind interna (text-zinc-400, etc.) lo pise -- sin esto,
+     cualquier texto sin su propia clase de color hereda el color del tema
+     global de la app (body / MuiCssBaseline), que en modo claro es casi
+     negro y se vuelve ilegible sobre este fondo oscuro fijo. */
+  color: #e4e4e7 !important;
+}
+/* InventorySuggestions/ProductPricingSuggestions/FinanceSuggestions/
+   MarketingSuggestions usan Tailwind `lg:grid-cols-2`, pensado para el
+   modal ancho del mapa 2D (max-w-2xl, ~672px) -- ese breakpoint mira el
+   ANCHO DEL VIEWPORT, no el de este panel angosto (min(420px, 42vw)), así
+   que en una pantalla grande igual fuerza 2 columnas acá y los nombres de
+   producto quedan truncados a una letra. Se anula dentro de este panel. */
+.ciudad3d-contenido-chat [class*="lg:grid-cols-2"] { display: block !important; }
+.ciudad3d-contenido-chat [class*="lg:grid-cols-2"] > * + * { margin-top: 8px; }
+
+/* ---- selector de agentes (inferior) ---- */
+/* flex-wrap en vez de depender solo del scroll horizontal -- con 5
+   agentes + Bodestock, en anchos intermedios (tablets, laptops chicas) no
+   entraban todos en una fila y quedaban cortados en el borde sin pista
+   clara de que había que deslizar; ahora caen a una segunda fila y se ven
+   todos de entrada en cualquier ancho. */
+.ciudad3d-chips {
+  position: absolute; z-index: 35; left: 0; right: 0; bottom: 0; padding: 10px 12px calc(12px + var(--safe-b));
+  display: flex; flex-wrap: wrap; gap: 8px; max-height: 50dvh; overflow-y: auto;
+  justify-content: center; scrollbar-width: none;
+}
+.ciudad3d-chips::-webkit-scrollbar { display: none; }
+.ciudad3d-chips button {
+  --c: #2f7bff; flex: none; min-height: 44px; padding: 0 14px; border-radius: 999px; font-weight: 600; font-size: 13.5px;
+  display: flex; align-items: center; gap: 8px; background: var(--glass); backdrop-filter: blur(12px); border: 1px solid var(--line); transition: transform .15s, background .2s;
+}
+.ciudad3d-chips button i { width: 10px; height: 10px; border-radius: 50%; background: var(--c); box-shadow: 0 0 10px var(--c); flex: none; }
+.ciudad3d-chips button.act { background: var(--c); color: #fff; border-color: transparent; }
+.ciudad3d-chips button.act i { background: #fff; box-shadow: none; }
+.ciudad3d-chips button:active { transform: scale(.96); }
+.ciudad3d-chips .badge {
+  display: inline-flex; align-items: center; justify-content: center; font-style: normal;
+  min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; font-size: 10px; font-weight: 800;
+  background: #ef4444; color: #fff; flex: none;
+}
+@media (max-width: 560px) {
+  .ciudad3d-chips { justify-content: center; gap: 6px; padding: 8px 10px calc(10px + var(--safe-b)); }
+  .ciudad3d-chips button { min-height: 38px; padding: 0 11px; font-size: 12.5px; gap: 6px; }
+}
+
+/* ---- pantalla de carga ---- */
+.ciudad3d-cargando { position: absolute; inset: 0; z-index: 100; display: grid; place-content: center; justify-items: center; gap: 14px; background: var(--bg); transition: opacity .4s; }
+.ciudad3d-cargando[data-hecho='true'] { opacity: 0; pointer-events: none; }
+.ciudad3d-cargando img { width: min(300px, 60vw); }
+.ciudad3d-cargando .ciudad3d-barra { width: min(260px, 60vw); height: 6px; border-radius: 6px; background: var(--line); overflow: hidden; }
+.ciudad3d-cargando .ciudad3d-barra i { display: block; height: 100%; background: #1a73ff; transition: width .2s; }
+.ciudad3d-cargando span { font-size: 13px; color: var(--sub); }
+
+/* ---- ajustes móvil / tablet ---- */
+@media (max-width: 560px) {
+  /* La marca (logo + selector de empresa) ocupa toda la fila de arriba;
+     Día/Lluvia bajan a una segunda fila, compactados a solo-ícono -- antes
+     competían por el mismo ancho que el <select> de empresa y se salían
+     de la pantalla (el texto largo "distribuidora L&N" empujaba "Lluvia"
+     fuera del viewport). */
+  .ciudad3d-barra-sup { padding-top: calc(10px + var(--safe-t)); }
+  .ciudad3d-barra-sup .marca { flex-basis: 100%; }
+  .ciudad3d-barra-sup .marca span { display: none; }
+  .ciudad3d-barra-sup .marca img { height: 26px; }
+  .ciudad3d-barra-sup .marca .empresa { font-size: 11.5px; padding: 5px 6px; }
+  .ciudad3d-barra-sup .controles { margin-left: auto; }
+  .ciudad3d-barra-sup .controles button { min-height: 36px; min-width: 0; padding: 0 10px; font-size: 12px; }
+  .ciudad3d-panel .kpis { grid-template-columns: 1fr; }
+  .ciudad3d-panel .kpi { flex-direction: row; align-items: baseline; gap: 8px; }
+  .ciudad3d-panel .kpi small { flex: 1; }
+  .ciudad3d-app .etiqueta { padding: 5px 10px; font-size: 12px; }
+}
+@media (max-height: 520px) and (orientation: landscape) {
+  .ciudad3d-panel.lado { top: 64px; bottom: 70px; width: min(360px, 46vw); }
+  .ciudad3d-chips { padding-bottom: calc(8px + var(--safe-b)); }
+}

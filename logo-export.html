@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stockly Logo - Exportar</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #0a0a0a 0%, #111827 50%, #1f2937 100%);
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      color: white;
+      margin-bottom: 30px;
+      font-size: 2rem;
+    }
+
+    #logo-container {
+      display: inline-block;
+      margin: 20px 0;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    button {
+      background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 50%, #93C5FD 100%);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.5);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 15px 40px rgba(59, 130, 246, 0.7);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .info {
+      color: rgba(255, 255, 255, 0.7);
+      margin-top: 20px;
+      font-size: 14px;
+    }
+
+    /* Preview del logo */
+    .logo-preview {
+      width: 400px;
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .warehouse-container {
+      width: 250px;
+      height: 200px;
+      position: relative;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .warehouse {
+      width: 100%;
+      height: 100%;
+    }
+
+    .logo-text {
+      font-size: 48px;
+      font-weight: 900;
+      background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 30%, #2563EB 60%, #1D4ED8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 4px 12px rgba(59, 130, 246, 0.5));
+      letter-spacing: -1px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Logo Stockly - Exportar</h1>
+
+    <div id="logo-container">
+      <div class="logo-preview" id="logo-preview">
+        <!-- Bodega animada -->
+        <div class="warehouse-container">
+          <svg class="warehouse" viewBox="0 0 200 160">
+            <!-- Edificio principal -->
+            <path d="M30 70 L100 30 L170 70 L170 150 L30 150 Z"
+                  fill="url(#warehouse-grad)"
+                  stroke="rgba(255,255,255,0.5)"
+                  stroke-width="3"/>
+
+            <!-- Techo -->
+            <path d="M20 70 L100 20 L180 70 L170 70 L100 30 L30 70 Z"
+                  fill="url(#roof-grad)"
+                  stroke="rgba(255,255,255,0.6)"
+                  stroke-width="2.5"/>
+
+            <!-- Puerta grande -->
+            <rect x="75" y="100" width="50" height="50"
+                  fill="rgba(30, 58, 138, 0.8)"
+                  stroke="rgba(255,255,255,0.4)"
+                  stroke-width="2" rx="2"/>
+
+            <!-- Ventanas -->
+            <rect x="45" y="85" width="20" height="20" fill="rgba(147, 197, 253, 0.7)" rx="2"/>
+            <rect x="135" y="85" width="20" height="20" fill="rgba(147, 197, 253, 0.7)" rx="2"/>
+
+            <!-- Letra S en la puerta -->
+            <text x="100" y="130" font-size="32" font-weight="900" fill="white" text-anchor="middle">S</text>
+
+            <!-- Gradientes -->
+            <defs>
+              <linearGradient id="warehouse-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#60A5FA"/>
+                <stop offset="100%" stop-color="#3B82F6"/>
+              </linearGradient>
+              <linearGradient id="roof-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#93C5FD"/>
+                <stop offset="100%" stop-color="#60A5FA"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <!-- Texto Stockly -->
+        <div class="logo-text">Stockly</div>
+      </div>
+    </div>
+
+    <div class="buttons">
+      <button onclick="downloadLogo(800)">Descargar 800x800 (WhatsApp)</button>
+      <button onclick="downloadLogo(1024)">Descargar 1024x1024 (HD)</button>
+      <button onclick="downloadLogo(512)">Descargar 512x512 (Web)</button>
+    </div>
+    <p class="info">Haz clic para descargar el logo de Stockly</p>
+  </div>
+
+  <script>
+    function downloadLogo(size) {
+      const canvas = document.createElement('canvas');
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext('2d');
+
+      const scale = size / 800;
+      const centerX = size / 2;
+
+      // Fondo transparente
+      ctx.clearRect(0, 0, size, size);
+
+      // Posición de la bodega
+      const warehouseWidth = 300 * scale;
+      const warehouseHeight = 240 * scale;
+      const warehouseX = centerX - warehouseWidth / 2;
+      const warehouseY = 150 * scale;
+
+      // Dibujar edificio principal
+      const buildGradient = ctx.createLinearGradient(warehouseX, warehouseY, warehouseX, warehouseY + warehouseHeight);
+      buildGradient.addColorStop(0, '#60A5FA');
+      buildGradient.addColorStop(1, '#3B82F6');
+
+      ctx.fillStyle = buildGradient;
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+      ctx.lineWidth = 4 * scale;
+      ctx.lineJoin = 'round';
+
+      ctx.beginPath();
+      ctx.moveTo(warehouseX + 45 * scale, warehouseY + 60 * scale);
+      ctx.lineTo(centerX, warehouseY + 15 * scale);
+      ctx.lineTo(warehouseX + warehouseWidth - 45 * scale, warehouseY + 60 * scale);
+      ctx.lineTo(warehouseX + warehouseWidth - 45 * scale, warehouseY + warehouseHeight - 30 * scale);
+      ctx.lineTo(warehouseX + 45 * scale, warehouseY + warehouseHeight - 30 * scale);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Dibujar techo
+      const roofGradient = ctx.createLinearGradient(warehouseX, warehouseY, warehouseX, warehouseY + 60 * scale);
+      roofGradient.addColorStop(0, '#93C5FD');
+      roofGradient.addColorStop(1, '#60A5FA');
+
+      ctx.fillStyle = roofGradient;
+      ctx.strokeStyle = 'rgba(255,255,255,0.6)';
+      ctx.lineWidth = 3.5 * scale;
+
+      ctx.beginPath();
+      ctx.moveTo(warehouseX + 30 * scale, warehouseY + 60 * scale);
+      ctx.lineTo(centerX, warehouseY);
+      ctx.lineTo(warehouseX + warehouseWidth - 30 * scale, warehouseY + 60 * scale);
+      ctx.lineTo(warehouseX + warehouseWidth - 45 * scale, warehouseY + 60 * scale);
+      ctx.lineTo(centerX, warehouseY + 15 * scale);
+      ctx.lineTo(warehouseX + 45 * scale, warehouseY + 60 * scale);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+
+      // Puerta grande
+      const doorX = centerX - 37.5 * scale;
+      const doorY = warehouseY + 150 * scale;
+      const doorWidth = 75 * scale;
+      const doorHeight = 75 * scale;
+
+      ctx.fillStyle = 'rgba(30, 58, 138, 0.8)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+      ctx.lineWidth = 2.5 * scale;
+      ctx.beginPath();
+      ctx.roundRect(doorX, doorY, doorWidth, doorHeight, 3 * scale);
+      ctx.fill();
+      ctx.stroke();
+
+      // Ventanas
+      ctx.fillStyle = 'rgba(147, 197, 253, 0.7)';
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)';
+      ctx.lineWidth = 1.5 * scale;
+
+      // Ventana izquierda
+      ctx.beginPath();
+      ctx.roundRect(warehouseX + 67.5 * scale, warehouseY + 127.5 * scale, 30 * scale, 30 * scale, 3 * scale);
+      ctx.fill();
+      ctx.stroke();
+
+      // Ventana derecha
+      ctx.beginPath();
+      ctx.roundRect(warehouseX + warehouseWidth - 97.5 * scale, warehouseY + 127.5 * scale, 30 * scale, 30 * scale, 3 * scale);
+      ctx.fill();
+      ctx.stroke();
+
+      // Letra S en la puerta
+      ctx.fillStyle = 'white';
+      ctx.font = `900 ${48 * scale}px system-ui, -apple-system, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('S', centerX, doorY + doorHeight / 2);
+
+      // Texto "Stockly" debajo
+      const textY = warehouseY + warehouseHeight + 90 * scale;
+
+      ctx.shadowColor = 'rgba(59, 130, 246, 0.6)';
+      ctx.shadowBlur = 25 * scale;
+      ctx.shadowOffsetX = 5 * scale;
+      ctx.shadowOffsetY = 5 * scale;
+
+      const textGradient = ctx.createLinearGradient(
+        centerX - 250 * scale, textY,
+        centerX + 250 * scale, textY
+      );
+      textGradient.addColorStop(0, '#60A5FA');
+      textGradient.addColorStop(0.3, '#3B82F6');
+      textGradient.addColorStop(0.6, '#2563EB');
+      textGradient.addColorStop(1, '#1D4ED8');
+
+      ctx.fillStyle = textGradient;
+      ctx.font = `900 ${110 * scale}px system-ui, -apple-system, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('Stockly', centerX, textY);
+
+      ctx.shadowColor = 'transparent';
+
+      // Download
+      const link = document.createElement('a');
+      link.download = `stockly-logo-${size}x${size}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    }
+  </script>
+</body>
+</html>

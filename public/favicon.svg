@@ -1,0 +1,16 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Fondo circular azul -->
+  <circle cx="32" cy="32" r="32" fill="#3B82F6"/>
+
+  <!-- Caja trasera (profundidad) -->
+  <rect x="18" y="21" width="19" height="19" rx="3" fill="white" opacity="0.3"/>
+
+  <!-- Caja frontal -->
+  <rect x="24" y="27" width="19" height="19" rx="3" fill="white"/>
+
+  <!-- Línea de gráfico ascendente -->
+  <path d="M26 38 L30 33 L34 35 L40 28" stroke="#3B82F6" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Punto final del gráfico -->
+  <circle cx="40" cy="28" r="3" fill="#3B82F6"/>
+</svg>

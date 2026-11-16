@@ -1,0 +1,468 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ============================================
+    // HELPER FUNCTIONS
+    // ============================================
+
+    // Check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Get user's company ID from custom claims
+    function getUserCompanyId() {
+      return request.auth.token.companyId;
+    }
+
+    // Get user's role from custom claims or worker document
+    function getUserRole() {
+      return request.auth.token.role;
+    }
+
+    // Get worker document for authenticated user in a company
+    function getWorkerDoc(companyId) {
+      return get(/databases/$(database)/documents/companies/$(companyId)/workers/$(request.auth.uid));
+    }
+
+    // Get user role from worker document (fallback si no tiene custom claims)
+    function getRoleFromDoc(companyId) {
+      return getWorkerDoc(companyId).data.role;
+    }
+
+    // Check if user belongs to the company
+    // Verifica custom claims O si existe documento del worker en la compañía (fallback)
+    function belongsToCompany(companyId) {
+      return isAuthenticated() &&
+             (getUserCompanyId() == companyId ||
+              exists(/databases/$(database)/documents/companies/$(companyId)/workers/$(request.auth.uid)));
+    }
+
+    // Check if user is super admin (by custom claim or by email)
+    function isSuperAdmin() {
+      return request.auth.token.role == 'SUPER_ADMIN'
+             || request.auth.token.email == 'abnerdariomedina@gmail.com'
+             || request.auth.token.email == 'stocklys86@gmail.com';
+    }
+
+    // Check if user has specific role (from custom claims or document)
+    function hasRoleInCompany(companyId, role) {
+      return getUserRole() == role || getRoleFromDoc(companyId) == role;
+    }
+
+    // Check if user is ADMIN in specific company (checks document too)
+    function isAdminInCompany(companyId) {
+      return hasRoleInCompany(companyId, 'ADMIN');
+    }
+
+    // Check if user is ADMIN or SUPERVISOR in specific company (checks document too)
+    function canEditInCompany(companyId) {
+      return hasRoleInCompany(companyId, 'ADMIN') || hasRoleInCompany(companyId, 'SUPERVISOR');
+    }
+
+    // Check if worker is active
+    function isActiveWorker(companyId) {
+      return exists(/databases/$(database)/documents/companies/$(companyId)/workers/$(request.auth.uid)) &&
+             getWorkerDoc(companyId).data.isActive == true;
+    }
+
+    // Check if resource belongs to the requesting user
+    function isOwner(resourceUserId) {
+      return request.auth.uid == resourceUserId;
+    }
+
+    // Validate incoming data has required fields
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+
+    // ============================================
+    // ROOT COLLECTIONS
+    // ============================================
+
+    // Decoración arrastrable de la Sala de Agentes (cajas, plantas, etc.
+    // que el Super Admin sube y posiciona sobre el mapa de cada oficina).
+    // No pertenece a ninguna empresa cliente -- es la vista propia del
+    // consultor, por eso vive a nivel raíz y no bajo companies/{companyId}.
+    match /room_decor/{agentId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // Companies collection - only backend can write
+    match /companies/{companyId} {
+      // Read: Permitir lectura pública para catálogos (nombre de empresa, etc.)
+      allow read: if true;
+
+      // Write: Only super admin (via backend) or system can create/update companies
+      allow write: if isSuperAdmin();
+
+      // ============================================
+      // COMPANY SUBCOLLECTIONS
+      // ============================================
+
+      // WORKERS - Employee management
+      match /workers/{workerId} {
+        // Read: Users can read their own worker document (needed for role lookup),
+        // All company members can read workers, super admins can read all
+        // ⭐ IMPORTANTE: También permitir leer si el firebaseUid del documento coincide con el usuario autenticado
+        // (necesario para el fallback de getUserCompanyId cuando no hay custom claims)
+        allow read: if isSuperAdmin()
+                    || request.auth.uid == workerId
+                    || belongsToCompany(companyId)
+                    || (isAuthenticated() && resource.data.firebaseUid == request.auth.uid);
+
+        // Create: Only admins or super admins can create workers
+        allow create: if (isSuperAdmin() || (belongsToCompany(companyId) && isAdminInCompany(companyId)))
+                      && hasRequiredFields(['firebaseUid', 'email', 'name', 'role', 'isActive', 'createdAt', 'createdBy']);
+
+        // Update: Admins or super admins can update any worker, users can update their own profile (limited fields)
+        allow update: if isSuperAdmin()
+                      || (belongsToCompany(companyId)
+                          && (
+                            isAdminInCompany(companyId)
+                            || (isOwner(resource.data.firebaseUid)
+                                && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'isActive', 'assignedWarehouses', 'limitType', 'dailyLimitMoney', 'dailyLimitUnits'])
+                               )
+                          )
+                         );
+
+        // Delete: Only admins or super admins (soft delete by setting isActive = false)
+        allow delete: if isSuperAdmin() || (belongsToCompany(companyId) && isAdminInCompany(companyId));
+      }
+
+      // ROLES - Permission templates
+      match /roles/{roleId} {
+        // Read: All authenticated company users can read roles, super admins can read all
+        allow read: if isSuperAdmin() || belongsToCompany(companyId);
+
+        // Create: Only admins or super admins can create roles
+        allow create: if isSuperAdmin() || (belongsToCompany(companyId) && isAdminInCompany(companyId));
+
+        // Update: Admins or super admins can update roles (including system roles for sync)
+        allow update: if isSuperAdmin() || (belongsToCompany(companyId) && isAdminInCompany(companyId));
+
+        // Delete: Only admins or super admins can delete roles, but NOT system roles
+        allow delete: if (isSuperAdmin() || (belongsToCompany(companyId) && isAdminInCompany(companyId)))
+                      && resource.data.isSystemRole != true;
+      }
+
+      // WAREHOUSES - Storage locations
+      match /warehouses/{warehouseId} {
+        // Read: All company members can read warehouses, super admins can read all
+        allow read: if isSuperAdmin() || belongsToCompany(companyId);
+
+        // Write: Admins or super admins can create/update/delete warehouses
+        allow write: if isSuperAdmin()
+                     || (belongsToCompany(companyId) && isAdminInCompany(companyId));
+      }
+
+      // TABLES - Mesas de restaurante
+      match /tables/{tableId} {
+        // Read: All company members can read tables (garzón/cajera necesitan ver el mapa)
+        allow read: if isSuperAdmin() || belongsToCompany(companyId);
+
+        // Update: admins pueden operar cualquier mesa. Un garzón solo puede tocar
+        // una mesa libre (para tomarla) o la mesa que ya tiene asignada (para seguir
+        // operándola) — nunca la mesa ocupada de otro garzón.
+        allow update: if isSuperAdmin()
+                      || (belongsToCompany(companyId) && isAdminInCompany(companyId))
+                      || (belongsToCompany(companyId) &&
+                          (resource.data.assignedWorkerId == null
+                           || resource.data.assignedWorkerId == request.auth.uid));
+
+        // Create/Delete: Only admins manage the table layout itself
+        allow create, delete: if isSuperAdmin()
+                               || (belongsToCompany(companyId) && isAdminInCompany(companyId));
+      }
+
+      // INVENTORY - Raw materials/products (LEGACY)
+      match /inventory/{productId} {
+        // ⭐ REGLAS SIMPLIFICADAS PARA SOPORTAR SISTEMAS SIN CUSTOM CLAIMS
+        // La validación de permisos real se hace en el frontend
+
+        // Read: Cualquier usuario autenticado puede leer inventory
+        allow read: if isAuthenticated();
+
+        // Create: Solo admins y supervisors pueden crear productos
+        allow create: if isSuperAdmin()
+                      || (isAuthenticated() && hasRequiredFields(['name', 'stock', 'unit', 'createdAt']));
+
+        // Update: Cualquier usuario autenticado puede actualizar (para registrar salidas)
+        allow update: if isAuthenticated();
+
+        // Delete: Solo usuarios autenticados pueden eliminar
+        allow delete: if isAuthenticated();
+      }
+
+      // ============================================
+      // INVENTORIES - Sistema de inventarios dinámicos (NUEVO)
+      // ============================================
+      match /inventories/{inventoryId} {
+        // Permitir lectura pública de inventarios para catálogos
+        allow read: if true;
+
+        // Create/Update/Delete: ADMIN o Super Admin
+        allow create, update, delete: if isSuperAdmin()
+                                      || (isAuthenticated() && isAdminInCompany(companyId));
+
+        // METADATA - Configuración del inventario
+        match /metadata/{metadataId} {
+          // Permitir lectura pública para mostrar nombre del catálogo
+          allow read: if true;
+          allow write: if isSuperAdmin()
+                       || (isAuthenticated() && isAdminInCompany(companyId));
+        }
+
+        // PRODUCTS - Productos del inventario
+        match /products/{productId} {
+          // Permitir lectura pública para catálogos públicos
+          allow read: if true;
+          allow create: if isAuthenticated() && hasRequiredFields(['name', 'stock', 'unit', 'createdAt']);
+          allow update: if isAuthenticated();
+          allow delete: if isAuthenticated();
+        }
+
+        // WAREHOUSES - Bodegas del inventario
+        match /warehouses/{warehouseId} {
+          allow read: if isAuthenticated();
+          allow write: if isAuthenticated();
+        }
+      }
+
+      // ============================================
+      // CUSTOMERS - Clientes guardados (NUEVO)
+      // ============================================
+      match /customers/{customerId} {
+        // Permitir lectura pública para autocompletado por RUT en catálogo
+        allow read: if true;
+        allow write: if isAuthenticated();
+      }
+
+      // ============================================
+      // ORDERS - Pedidos desde catálogo público (NUEVO)
+      // ============================================
+      match /orders/{orderId} {
+        // Lectura pública de UN pedido puntual (por ID) -- el cliente de
+        // la tienda pública (PublicStore.jsx) nunca tiene sesión, y
+        // necesita escuchar en tiempo real el estado de SU pedido después
+        // de crearlo (onSnapshot). Esto no expone la colección completa:
+        // sin saber el orderId exacto (un ID random de Firestore) no hay
+        // forma de listar ni adivinar los pedidos de otro cliente.
+        allow get: if true;
+        allow list: if isAuthenticated();
+        // Permitir creación pública desde el catálogo (sin autenticación)
+        allow create: if true;
+        allow update, delete: if isAuthenticated();
+      }
+
+      // INVENTORY_EXITS - Withdrawal records
+      match /inventory_exits/{exitId} {
+        // ⭐ REGLAS SIMPLIFICADAS PARA SOPORTAR SISTEMAS SIN CUSTOM CLAIMS
+        // La validación de permisos real se hace en el frontend
+
+        // Read: Cualquier usuario autenticado puede leer exits
+        allow read: if isAuthenticated();
+
+        // Create: Cualquier usuario autenticado puede crear exits
+        allow create: if isAuthenticated()
+                      && hasRequiredFields(['workerId', 'warehouseId', 'products', 'totalValue', 'reason', 'createdAt']);
+
+        // Update: Cualquier usuario autenticado puede actualizar
+        allow update: if isAuthenticated();
+
+        // Delete: Solo super admins pueden eliminar
+        allow delete: if isSuperAdmin();
+      }
+
+      // PURCHASES - Registro plano de cada compra de mercadería (creado
+      // junto con la actualización de stock/PPP, ver purchaseService.js).
+      // Mismo criterio de permisos que inventory_exits: la validación real
+      // de permisos vive en el frontend. Se usa para el crédito fiscal del
+      // IVA estimado (accountingAgent.js).
+      match /purchases/{purchaseId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated()
+                      && hasRequiredFields(['productId', 'totalPrice', 'periodo', 'createdAt']);
+        allow update: if isAuthenticated();
+        allow delete: if isSuperAdmin();
+      }
+
+      // PERMISSION_REQUESTS - Limit override requests
+      match /permission_requests/{requestId} {
+        // Read: Admins and supervisors can read all, workers can read their own
+        allow read: if belongsToCompany(companyId)
+                    && (canEditInCompany(companyId) || resource.data.workerId == request.auth.uid);
+
+        // Create: Workers can create permission requests when they hit limits
+        allow create: if belongsToCompany(companyId)
+                      && hasRequiredFields(['workerId', 'status', 'requestedAt'])
+                      && request.resource.data.workerId == request.auth.uid
+                      && request.resource.data.status == 'PENDING';
+
+        // Update: Admins and supervisors can approve/reject
+        allow update: if belongsToCompany(companyId)
+                      && canEditInCompany(companyId)
+                      && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'resolvedAt', 'resolvedBy', 'resolutionNotes']);
+
+        // Delete: Only admins
+        allow delete: if belongsToCompany(companyId) && isAdminInCompany(companyId);
+      }
+
+      // NOTIFICATION_LOGS - Audit trail
+      match /notificationLogs/{logId} {
+        // Read: Only admins
+        allow read: if belongsToCompany(companyId) && isAdminInCompany(companyId);
+
+        // Write: Backend/functions only (no direct client write)
+        allow write: if false;
+      }
+
+      // SETTINGS - Company configuration
+      match /settings/{settingId} {
+        // Read: All authenticated company users
+        allow read: if belongsToCompany(companyId);
+
+        // Write: Only admins
+        // IMPORTANTE: 'libredte' settings requiere permisos especiales (credenciales API)
+        allow write: if belongsToCompany(companyId) && isAdminInCompany(companyId);
+      }
+
+      // PRODUCTOS_TERMINADOS - Finished products/costing
+      match /productos_terminados/{productoId} {
+        // Read: All company members, super admins can read all
+        allow read: if isSuperAdmin() || belongsToCompany(companyId);
+
+        // Write: Admins, supervisors, and super admins
+        allow write: if isSuperAdmin()
+                     || (belongsToCompany(companyId) && canEditInCompany(companyId));
+      }
+
+      // CASH_REGISTERS - Turnos de caja
+      match /cash_registers/{registerId} {
+        allow read: if isAuthenticated();
+        allow create, update: if isAuthenticated();
+        allow delete: if isSuperAdmin();
+      }
+
+      // CASH_MOVEMENTS - Retiros de efectivo durante un turno (ver
+      // cash-register-service.js:registerCashWithdrawal). Mismo criterio
+      // que cash_registers: son hermanas, mismo nivel de confianza.
+      match /cash_movements/{movementId} {
+        allow read: if isAuthenticated();
+        allow create: if isAuthenticated();
+        allow update, delete: if isSuperAdmin();
+      }
+
+      // ============================================
+      // GESTIÓN EMPRESARIAL (subcolecciones de companies)
+      // ============================================
+      match /gestion_reportes/{docId} {
+        allow read: if isSuperAdmin() || (isAuthenticated() && belongsToCompany(companyId));
+        allow write: if isSuperAdmin();
+      }
+      match /gestion_config/{docId} {
+        allow read: if isSuperAdmin() || (isAuthenticated() && belongsToCompany(companyId));
+        allow write: if isSuperAdmin();
+      }
+      match /gestion_gastos/{docId} {
+        allow read, write: if isSuperAdmin();
+      }
+      // PROSPECTS - Negocios prospectados por el Agente de Marketing. Además
+      // del super-admin (herramienta de consultor), cualquier miembro de la
+      // empresa puede leer/crear/actualizar: el vendedor en terreno los
+      // encuentra (TerrenoProspeccion.jsx) y el dueño/admin los marca como
+      // visitados desde Mi Consultor (ProspectsToVisitPanel.jsx). Sin delete
+      // para la empresa -- borrar prospectos queda reservado al consultor.
+      match /prospects/{prospectId} {
+        allow read, create, update: if isSuperAdmin() || (isAuthenticated() && belongsToCompany(companyId));
+        allow delete: if isSuperAdmin();
+      }
+      // AGENT_ALERTS - Notificaciones generadas por el análisis diario automático
+      // de los agentes (Pricing/Finanzas/Marketing) — herramienta de consultor
+      match /agent_alerts/{alertId} {
+        allow read, write: if isSuperAdmin();
+      }
+      // AGENT_AI_CACHE - Último análisis en texto (Claude) de cada agente
+      // que analiza solo al abrir su panel (hoy solo Inventario, ver
+      // inventoryAgent.js:getInventoryAIAnalysisCached), para no pagar una
+      // llamada nueva cada vez que se abre si los datos no cambiaron.
+      match /agent_ai_cache/{docId} {
+        allow read, write: if isSuperAdmin() || (isAuthenticated() && belongsToCompany(companyId));
+      }
+      match /facturas_proveedores/{docId} {
+        allow read: if isSuperAdmin() || (isAuthenticated() && belongsToCompany(companyId));
+        allow create: if isAuthenticated() && belongsToCompany(companyId);
+        allow update: if isSuperAdmin();
+        allow delete: if isSuperAdmin();
+      }
+    }
+
+    // ============================================
+    // CONFIG - App-wide configuration (plans, referral program, etc.)
+    // ============================================
+    match /config/{configId} {
+      // Read: Public read for plan prices (landing page needs this without auth)
+      allow read: if true;
+
+      // Write: Only super admins can modify config
+      allow write: if isSuperAdmin();
+    }
+
+    // ============================================
+    // DAILY_LIMITS - Global tracking (outside companies)
+    // ============================================
+    match /daily_limits/{limitId} {
+      // Read/Write: Workers autenticados pueden gestionar límites diarios
+      // Super admins pueden hacer todo
+      allow read, write: if isSuperAdmin() || isAuthenticated();
+    }
+
+    // ============================================
+    // SUPER ADMIN PASSKEYS - Biometric auth credentials
+    // ============================================
+    match /superadmin_passkeys/{deviceId} {
+      // Solo el super admin autenticado puede leer y escribir sus propias passkeys
+      allow read, write: if isSuperAdmin();
+    }
+
+    // ============================================
+    // FCM TOKENS — Push notifications
+    // ============================================
+    match /fcm_tokens/{uid} {
+      allow read, write: if isAuthenticated() && request.auth.uid == uid;
+      allow read: if isSuperAdmin() || (isAuthenticated() && belongsToCompany(companyId));
+    }
+
+    // ============================================
+    // SUPER ADMIN CONFIG (MRR manual, settings)
+    // ============================================
+    match /sa_config/{docId} {
+      allow read, write: if isSuperAdmin();
+    }
+
+
+    // ============================================
+    // SUPER ADMIN PAYMENTS (caja de ingresos)
+    // ============================================
+    match /sa_payments/{paymentId} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    // ============================================
+    // SUPER ADMIN NOTIFICATIONS
+    // ============================================
+    match /sa_notifications/{docId} {
+      allow read, write: if isSuperAdmin();
+    }
+
+    // ============================================
+    // DEFAULT DENY ALL OTHER PATHS
+    // ============================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

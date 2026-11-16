@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guía del Trabajador - Stockly</title>
+    <style>
+        @page {
+            margin: 2cm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 21cm;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+        }
+
+        /* Portada */
+        .cover-page {
+            text-align: center;
+            padding: 60px 40px;
+            page-break-after: always;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .cover-title {
+            font-size: 48px;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .cover-emoji {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .cover-subtitle {
+            font-size: 24px;
+            color: #64748b;
+            margin-bottom: 60px;
+            font-weight: 400;
+        }
+
+        .cover-intro {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin: 40px 0;
+        }
+
+        .cover-intro h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-intro ul {
+            list-style: none;
+            text-align: left;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .cover-intro li {
+            padding: 12px 0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cover-intro li:before {
+            content: "✅";
+            font-size: 20px;
+        }
+
+        .cover-ideal {
+            text-align: left;
+            padding: 30px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-top: 40px;
+        }
+
+        .cover-ideal strong {
+            color: #1e40af;
+            font-size: 18px;
+        }
+
+        /* Páginas de contenido */
+        .content-page {
+            page-break-after: always;
+            padding: 20px 0;
+        }
+
+        .page-header {
+            border-bottom: 3px solid #3b82f6;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 32px;
+            color: #1e40af;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #1e40af;
+            margin: 30px 0 15px 0;
+            font-weight: 700;
+        }
+
+        h3 {
+            font-size: 20px;
+            color: #1e40af;
+            margin: 20px 0 10px 0;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #475569;
+            font-size: 15px;
+        }
+
+        /* Listas */
+        ul, ol {
+            margin: 15px 0 15px 30px;
+            color: #475569;
+        }
+
+        li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        /* Pasos numerados */
+        .step-container {
+            margin: 20px 0;
+        }
+
+        .step {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .step strong {
+            color: #1e40af;
+            font-size: 16px;
+        }
+
+        .step p {
+            margin: 10px 0;
+            padding-left: 48px;
+        }
+
+        .step ul {
+            padding-left: 48px;
+            margin-top: 10px;
+        }
+
+        /* Cajas de alerta */
+        .warning {
+            background: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+
+        .warning strong {
+            color: #b45309;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .tip {
+            background: #d1fae5;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+
+        .tip strong {
+            color: #047857;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .info {
+            background: #dbeafe;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            page-break-inside: avoid;
+        }
+
+        /* Checkboxes */
+        .checkbox-list {
+            list-style: none;
+            margin-left: 0;
+        }
+
+        .checkbox-list li:before {
+            content: "☑";
+            color: #10b981;
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        /* Tabla de ejemplo */
+        .example-box {
+            background: #f1f5f9;
+            border: 2px dashed #94a3b8;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            page-break-inside: avoid;
+        }
+
+        /* Secciones con icono */
+        .section-icon {
+            font-size: 24px;
+            margin-right: 8px;
+        }
+
+        /* Footer */
+        .page-footer {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+        }
+
+        /* Última página */
+        .final-page {
+            text-align: center;
+            padding: 60px 40px;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .final-page h1 {
+            font-size: 36px;
+            color: #1e40af;
+            margin-bottom: 30px;
+        }
+
+        .checklist {
+            background: #f8fafc;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: left;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        .checklist h3 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        strong {
+            color: #1e40af;
+        }
+
+        @media print {
+            body {
+                max-width: 100%;
+            }
+            .content-page {
+                page-break-after: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- PORTADA -->
+    <div class="cover-page">
+        <div class="cover-emoji">📖</div>
+        <h1 class="cover-title">GUÍA DEL TRABAJADOR</h1>
+        <h2 class="cover-title" style="font-size: 42px;">STOCKLY</h2>
+        <p class="cover-subtitle">Sistema de Gestión de Inventario y Costos</p>
+
+        <div class="cover-intro">
+            <h2><span class="section-icon">🎯</span> ¿QUÉ ES STOCKLY?</h2>
+            <ul>
+                <li>Controlar el inventario en tiempo real</li>
+                <li>Registrar salidas de productos</li>
+                <li>Gestionar bodegas asignadas</li>
+                <li>Monitorear tu límite diario</li>
+                <li>Respetar límites de salida</li>
+            </ul>
+        </div>
+
+        <div class="cover-ideal">
+            <p><strong>Tu rol como trabajador:</strong> Registrar las salidas de productos desde las bodegas asignadas de manera rápida y precisa.</p>
+        </div>
+    </div>
+
+    <!-- PÁGINA 1: BIENVENIDO -->
+    <div class="content-page">
+        <div class="page-header">
+            <h1 class="page-title"><span class="section-icon">🎯</span> BIENVENIDO</h1>
+        </div>
+
+        <p style="font-size: 16px;">Esta guía te ayudará a utilizar Stockly de manera efectiva en tu trabajo diario. Como trabajador, tu función principal es <strong>gestionar las salidas de productos</strong> desde las bodegas asignadas.</p>
+
+        <div class="tip">
+            <strong>💡 Importante</strong>
+            <p>Solo necesitas conocer las funciones básicas para registrar salidas. Tu supervisor o administrador se encarga del resto.</p>
+        </div>
+    </div>
+
+    <!-- PÁGINA 2: INICIO DE SESIÓN -->
+    <div class="content-page">
+        <div class="page-header">
+            <h1 class="page-title"><span class="section-icon">🔐</span> PASO 1: INICIO DE SESIÓN</h1>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">1</span>
+                <strong>Accede a la aplicación</strong>
+            </div>
+            <p>Abre tu navegador web y ve a la dirección que te proporcionó tu administrador.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">2</span>
+                <strong>Ingresa tus credenciales</strong>
+            </div>
+            <ul>
+                <li><strong>Email:</strong> El correo electrónico que te proporcionó tu administrador</li>
+                <li><strong>Contraseña:</strong> Tu contraseña personal</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Importante</strong>
+            <p>Mantén tu contraseña segura y no la compartas con nadie. Si la olvidas, contacta a tu administrador.</p>
+        </div>
+    </div>
+
+    <!-- PÁGINA 3: TU DASHBOARD -->
+    <div class="content-page">
+        <div class="page-header">
+            <h1 class="page-title"><span class="section-icon">🏠</span> PASO 2: TU DASHBOARD</h1>
+        </div>
+
+        <p>Al iniciar sesión, verás tu dashboard con información importante:</p>
+
+        <ul style="font-size: 15px; line-height: 1.8;">
+            <li><strong>Límite diario:</strong> Cuánto dinero o unidades puedes sacar por día</li>
+            <li><strong>Consumo del día:</strong> Lo que ya has utilizado hoy (porcentaje usado)</li>
+            <li><strong>Bodegas asignadas:</strong> Las bodegas a las que tienes acceso</li>
+        </ul>
+
+        <div class="tip">
+            <strong>💡 Consejo</strong>
+            <p>Revisa tu límite diario al comenzar tu turno para planificar mejor tus salidas.</p>
+        </div>
+    </div>
+
+    <!-- PÁGINA 4: VER TUS BODEGAS -->
+    <div class="content-page">
+        <div class="page-header">
+            <h1 class="page-title"><span class="section-icon">📦</span> PASO 3: VER TUS BODEGAS</h1>
+        </div>
+
+        <h2>Acceder a Bodegas</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">1</span>
+                <strong>Navega a Bodegas</strong>
+            </div>
+            <p>Haz clic en <strong>"Mis Bodegas"</strong> en el menú de navegación</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">2</span>
+                <strong>Visualiza tus bodegas asignadas</strong>
+            </div>
+            <p>Verás una lista de las bodegas a las que tienes acceso</p>
+        </div>
+
+        <h3>Información que puedes ver:</h3>
+        <ul>
+            <li>Nombre de la bodega</li>
+            <li>Productos disponibles en cada bodega</li>
+            <li>Cantidad en stock de cada producto</li>
+            <li>Estado del inventario (stock disponible)</li>
+        </ul>
+
+        <div class="warning">
+            <strong>⚠️ Atención</strong>
+            <p>Solo puedes ver y acceder a las bodegas que tu supervisor te asignó. Si necesitas acceso a otra bodega, solicítalo a tu supervisor.</p>
+        </div>
+    </div>
+
+    <!-- PÁGINA 5: REGISTRAR SALIDAS (PARTE 1) -->
+    <div class="content-page">
+        <div class="page-header">
+            <h1 class="page-title"><span class="section-icon">📤</span> PASO 4: REGISTRAR SALIDAS</h1>
+        </div>
+
+        <p style="font-size: 16px;"><strong>Esta es tu tarea principal.</strong> Aquí aprenderás a registrar correctamente las salidas de productos.</p>
+
+        <h2>Paso a Paso:</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">1</span>
+                <strong>Accede a Salida de Inventario</strong>
+            </div>
+            <p>Navega a la sección de <strong>"Mis Bodegas"</strong> desde el menú</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">2</span>
+                <strong>Selecciona la Bodega</strong>
+            </div>
+            <p>Elige la bodega desde la cual vas a sacar productos</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">3</span>
+                <strong>Busca el Producto</strong>
+            </div>
+            <p>Usa la barra de búsqueda para encontrar el producto que necesitas:</p>
+            <ul>
+                <li>Puedes buscar por nombre del producto</li>
+                <li>Por código de barras (usando el escáner)</li>
+                <li>Por código SKU si lo conoces</li>
+            </ul>
+        </div>
+
+        <div class="tip">
+            <strong>💡 Usa el escáner</strong>
+            <p>Si el producto tiene código de barras, usa el botón de cámara para escanearlo. Es más rápido y evita errores.</p>
+        </div>
+    </div>
+
+    <!-- PÁGINA 6: REGISTRAR SALIDAS (PARTE 2) -->
+    <div class="content-page">
+        <h2>Continuación: Registrar Salidas</h2>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">4</span>
+                <strong>Registra la Salida</strong>
+            </div>
+            <p>Haz clic en el botón <strong>"Registrar Salida"</strong> o el icono correspondiente junto al producto</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">5</span>
+                <strong>Completa la Información</strong>
+            </div>
+            <ul>
+                <li><strong>Cantidad:</strong> Número exacto de unidades que estás sacando</li>
+                <li><strong>Motivo:</strong> El motivo siempre será <strong>Producción</strong> (uso para elaborar productos)</li>
+                <li><strong>Notas (opcional):</strong> Cualquier observación adicional que quieras agregar</li>
+            </ul>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">6</span>
+                <strong>Confirma la Operación</strong>
+            </div>
+            <p>Revisa que toda la información sea correcta y confirma la salida</p>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Antes de Confirmar</strong>
+            <ul class="checkbox-list">
+                <li>Verifica que la cantidad sea correcta</li>
+                <li>Asegúrate de seleccionar el producto correcto</li>
+                <li>Confirma que no excedes tu límite diario</li>
+                <li>Una vez confirmado, la operación queda registrada permanentemente</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- PÁGINA 7: BUENAS PRÁCTICAS -->
+    <div class="content-page">
+        <div class="page-header">
+            <h1 class="page-title"><span class="section-icon">✨</span> BUENAS PRÁCTICAS</h1>
+        </div>
+
+        <div class="tip">
+            <strong>💡 Buenas Prácticas</strong>
+            <ul class="checkbox-list">
+                <li>Registra las salidas <strong>inmediatamente</strong> después de sacar el producto</li>
+                <li>Sé <strong>exacto</strong> con las cantidades (no aproximadas)</li>
+                <li>Si hay algún problema con el producto, anótalo en las notas</li>
+                <li>Verifica el stock antes de prometer productos a clientes</li>
+                <li>Mantén tu área de trabajo ordenada</li>
+            </ul>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Errores Comunes a Evitar</strong>
+            <p><strong>❌ NO hagas esto:</strong></p>
+            <ul>
+                <li>No saques productos sin registrarlos inmediatamente</li>
+                <li>No registres salidas "aproximadas" - sé exacto con las cantidades</li>
+                <li>No uses la cuenta de otro trabajador</li>
+                <li>No registres salidas de productos que no sacaste realmente</li>
+                <li>No intentes acceder a bodegas no asignadas</li>
+            </ul>
+        </div>
+
+        <div class="tip">
+            <strong>✅ SÍ haz esto:</strong>
+            <ul class="checkbox-list">
+                <li>Registra las salidas en el momento</li>
+                <li>Verifica las cantidades antes de confirmar</li>
+                <li>Agrega notas útiles sobre la salida</li>
+                <li>Revisa tu límite antes de registrar salidas grandes</li>
+                <li>Informa cualquier discrepancia inmediatamente</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- PÁGINA 8: LÍMITES DIARIOS -->
+    <div class="content-page">
+        <div class="page-header">
+            <h1 class="page-title"><span class="section-icon">⚖️</span> PASO 5: LÍMITES DIARIOS</h1>
+        </div>
+
+        <h2>¿Qué son los límites diarios?</h2>
+        <p>Tu administrador ha configurado límites para controlar cuánto puedes sacar por día. Esto puede ser:</p>
+
+        <ul>
+            <li><strong>Límite en dinero:</strong> Valor total de productos que puedes sacar (ej. $50.000/día)</li>
+            <li><strong>Límite en unidades:</strong> Cantidad total de productos que puedes sacar (ej. 20 unidades/día)</li>
+        </ul>
+
+        <h2>¿Qué pasa si alcanzas el límite?</h2>
+
+        <div class="warning">
+            <strong>⚠️ Límite Alcanzado</strong>
+            <ul>
+                <li>El sistema te avisará cuando estés cerca del límite</li>
+                <li>No podrás registrar más salidas hasta el día siguiente</li>
+                <li>Si necesitas exceder el límite, contacta a tu supervisor o administrador</li>
+                <li>El límite es ESTRICTO y no se puede evadir</li>
+            </ul>
+        </div>
+
+        <h2>Monitorear tu límite:</h2>
+        <ul>
+            <li>Revisa el indicador en tu dashboard al inicio del día</li>
+            <li>Planifica tus salidas según tu límite disponible</li>
+            <li>El límite se reinicia automáticamente cada día a las 00:00</li>
+            <li>Puedes ver cuánto has consumido en tu dashboard</li>
+        </ul>
+
+        <div class="example-box">
+<strong>Ejemplo:</strong>
+Tu límite: $30.000/día
+Ya sacaste: $25.000
+Disponible: $5.000
+
+Si intentas sacar productos por $10.000:
+→ ❌ El sistema NO lo permitirá
+→ Debes esperar al día siguiente
+→ O contactar a un admin para ajuste temporal
+        </div>
+    </div>
+
+    <!-- PÁGINA 9: PERFIL -->
+    <div class="content-page">
+        <div class="page-header">
+            <h1 class="page-title"><span class="section-icon">👤</span> PASO 6: TU PERFIL</h1>
+        </div>
+
+        <p>Accede a tu perfil desde el menú <strong>"Más"</strong> → <strong>"Perfil"</strong> para:</p>
+
+        <ul style="font-size: 15px; line-height: 1.8;">
+            <li>Ver tu información personal</li>
+            <li>Revisar tu rol (Trabajador)</li>
+            <li>Descargar esta guía en PDF</li>
+            <li>Cerrar sesión de forma segura</li>
+            <li>Cambiar entre modo claro/oscuro</li>
+        </ul>
+
+        <div class="info">
+            <p><strong>Nota:</strong> No puedes modificar tu información personal. Si necesitas cambiar algo, contacta a tu administrador.</p>
+        </div>
+    </div>
+
+    <!-- PÁGINA 10: PREGUNTAS FRECUENTES -->
+    <div class="content-page">
+        <div class="page-header">
+            <h1 class="page-title"><span class="section-icon">❓</span> PASO 7: PREGUNTAS FRECUENTES</h1>
+        </div>
+
+        <h3>¿Qué hago si no encuentro un producto?</h3>
+        <p>Contacta a tu supervisor o administrador. Es posible que el producto no esté registrado en el sistema o no esté disponible en tu bodega asignada.</p>
+
+        <h3>¿Puedo corregir una salida que registré mal?</h3>
+        <p>No puedes modificar salidas ya registradas. Contacta inmediatamente a tu supervisor o administrador para que corrijan el error.</p>
+
+        <h3>¿Qué hago si el sistema me dice que no hay stock?</h3>
+        <p>Verifica en otra bodega si tienes acceso. Si no, informa a tu supervisor para que gestione la reposición del producto.</p>
+
+        <h3>¿Puedo acceder desde mi celular?</h3>
+        <p>Sí, Stockly funciona perfectamente en dispositivos móviles. Usa el mismo navegador y credenciales que en el computador.</p>
+
+        <h3>Olvidé mi contraseña</h3>
+        <p>Contacta a tu administrador para que restablezca tu contraseña. Por seguridad, solo los administradores pueden hacer esto.</p>
+
+        <h3>¿Qué hago si alcanzo mi límite diario?</h3>
+        <p>Tu límite se reinicia al día siguiente automáticamente. Si necesitas más, contacta a tu supervisor o administrador para que evalúe aumentar tu límite temporalmente.</p>
+
+        <h3>¿Cómo uso el escáner de códigos?</h3>
+        <p>Haz clic en el ícono de cámara, permite el acceso, y apunta al código de barras del producto. El sistema lo detectará automáticamente.</p>
+    </div>
+
+    <!-- PÁGINA 11: SOPORTE -->
+    <div class="content-page">
+        <div class="page-header">
+            <h1 class="page-title"><span class="section-icon">📞</span> PASO 8: SOPORTE Y AYUDA</h1>
+        </div>
+
+        <p>Si tienes problemas o preguntas:</p>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">1</span>
+                <strong>Consulta esta guía</strong>
+            </div>
+            <p>La mayoría de las dudas comunes están respondidas aquí. Lee la sección de preguntas frecuentes.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">2</span>
+                <strong>Contacta a tu Supervisor</strong>
+            </div>
+            <p>Tu supervisor puede ayudarte con problemas operativos diarios, ajustar límites temporalmente, o resolver dudas sobre productos.</p>
+        </div>
+
+        <div class="step">
+            <div class="step-header">
+                <span class="step-number">3</span>
+                <strong>Contacta al Administrador</strong>
+            </div>
+            <p>Para problemas técnicos, acceso, configuración de cuenta, o si olvidaste tu contraseña.</p>
+        </div>
+
+        <div class="warning">
+            <strong>⚠️ Reporta problemas de inmediato</strong>
+            <p>Si notas discrepancias en el inventario, errores en salidas, o cualquier problema, repórtalo inmediatamente. Es mejor prevenir que corregir después.</p>
+        </div>
+    </div>
+
+    <!-- PÁGINA FINAL -->
+    <div class="final-page">
+        <h1><span class="section-icon">🎉</span> ¡LISTO PARA EMPEZAR!</h1>
+
+        <div class="checklist">
+            <h3>Checklist de Inicio Rápido</h3>
+            <ul class="checkbox-list">
+                <li>He iniciado sesión con mis credenciales</li>
+                <li>Revisé mi dashboard y límite diario</li>
+                <li>Conozco mis bodegas asignadas</li>
+                <li>Sé cómo registrar una salida</li>
+                <li>Entiendo los límites diarios</li>
+                <li>Conozco las buenas prácticas</li>
+            </ul>
+        </div>
+
+        <div class="tip" style="max-width: 600px; margin: 30px auto;">
+            <strong>💪 Tips para el Éxito</strong>
+            <ul>
+                <li>Registra las salidas en el momento (no las acumules)</li>
+                <li>Sé exacto con las cantidades</li>
+                <li>Revisa tu límite al inicio del día</li>
+                <li>Reporta cualquier problema de inmediato</li>
+            </ul>
+        </div>
+
+        <div class="page-footer">
+            <p><strong>Stockly</strong> - Sistema de Gestión de Inventario</p>
+            <p>Versión 1.0 - Guía del Trabajador</p>
+            <p style="margin-top: 20px;">
+                Esta guía es solo para uso interno. No compartir fuera de la organización.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

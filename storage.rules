@@ -1,0 +1,56 @@
+rules_version = '2';
+
+// Firebase Storage Security Rules
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isSuperAdmin() {
+      return request.auth != null &&
+             (request.auth.token.role == 'SUPER_ADMIN'
+              || request.auth.token.email == 'abnerdariomedina@gmail.com'
+              || request.auth.token.email == 'stocklys86@gmail.com');
+    }
+
+    // Assets decorativos de la Sala de Agentes (cajas, plantas, etc. que el
+    // Super Admin sube y arrastra sobre el mapa de cada oficina). Lectura
+    // pública porque el mapa se renderiza en la Sala sin volver a pedir
+    // token por archivo; escritura solo para el Super Admin.
+    match /room-decor/{agentId}/{fileName} {
+      allow read: if true;
+      allow write: if isSuperAdmin()
+                   && request.resource.size < 3 * 1024 * 1024 // Max 3MB
+                   && (request.resource.contentType.matches('image/.*'));
+    }
+
+    // Regla para fotos de productos — {rest=**} cubre tanto el esquema viejo
+    // (companies/{companyId}/products/{fileName}) como el nuevo, agrupado por
+    // producto (companies/{companyId}/products/{productId}/{fileName})
+    match /companies/{companyId}/products/{rest=**} {
+      // Permitir lectura a todos (para catálogo público)
+      allow read: if true;
+
+      // Permitir escritura solo a usuarios autenticados de la misma empresa
+      allow write: if request.auth != null
+                   && request.auth.token.companyId == companyId
+                   && request.resource.size < 5 * 1024 * 1024  // Max 5MB
+                   && request.resource.contentType.matches('image/.*'); // Solo imágenes
+    }
+
+    // Facturas de proveedores subidas por el cliente
+    match /facturas/{companyId}/{periodo}/{fileName} {
+      // Lectura: usuario autenticado (el SA verifica por Firestore)
+      allow read: if request.auth != null;
+
+      // Escritura: usuario autenticado, máx 10MB, imágenes y PDF
+      allow write: if request.auth != null
+                   && request.resource.size < 10 * 1024 * 1024
+                   && (request.resource.contentType.matches('image/.*')
+                       || request.resource.contentType == 'application/pdf');
+    }
+
+    // Regla por defecto: denegar todo lo demás
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

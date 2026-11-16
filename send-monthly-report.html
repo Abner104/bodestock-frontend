@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enviar Reporte Mensual - Stockly</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #0a0a0a 0%, #111827 50%, #1f2937 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      color: #1f2937;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+
+    .subtitle {
+      color: #6b7280;
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      color: #374151;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e5e7eb;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #3b82f6;
+    }
+
+    button {
+      width: 100%;
+      background: linear-gradient(135deg, #3b82f6, #6366f1);
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .result {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    .result.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 2px solid #10b981;
+    }
+
+    .result.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 2px solid #ef4444;
+    }
+
+    .help {
+      background: #f3f4f6;
+      padding: 16px;
+      border-radius: 8px;
+      margin-top: 20px;
+      font-size: 14px;
+      color: #4b5563;
+    }
+
+    .help h3 {
+      margin: 0 0 10px 0;
+      color: #1f2937;
+      font-size: 16px;
+    }
+
+    .help code {
+      background: #1f2937;
+      color: #60a5fa;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📊 Enviar Reporte Mensual</h1>
+    <p class="subtitle">Genera y envía el reporte de salidas del mes</p>
+
+    <form id="reportForm">
+      <div class="form-group">
+        <label for="email">Email de destino</label>
+        <input
+          type="email"
+          id="email"
+          value="samubarber405@gmail.com"
+          required
+          placeholder="correo@ejemplo.com"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="companyId">Company ID</label>
+        <input
+          type="text"
+          id="companyId"
+          required
+          placeholder="Pega aquí tu Company ID"
+        >
+      </div>
+
+      <button type="submit" id="sendBtn">
+        📧 Enviar Reporte Mensual
+      </button>
+    </form>
+
+    <div id="result" class="result"></div>
+
+    <div class="help">
+      <h3>🔍 ¿Cómo obtener tu Company ID?</h3>
+      <ol style="margin: 10px 0; padding-left: 20px;">
+        <li>Abre Stockly en tu navegador</li>
+        <li>Presiona <code>F12</code> para abrir DevTools</li>
+        <li>Ve a la pestaña "Console"</li>
+        <li>Ejecuta: <code>localStorage.getItem("companyId")</code></li>
+        <li>Copia el ID y pégalo arriba</li>
+      </ol>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('reportForm');
+    const resultDiv = document.getElementById('result');
+    const sendBtn = document.getElementById('sendBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('email').value;
+      const companyId = document.getElementById('companyId').value;
+
+      // Validar
+      if (!email || !companyId) {
+        showResult('Por favor completa todos los campos', 'error');
+        return;
+      }
+
+      // Deshabilitar botón
+      sendBtn.disabled = true;
+      sendBtn.textContent = '⏳ Enviando...';
+
+      try {
+        const response = await fetch('http://localhost:3001/api/reports/monthly-exits', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            to: email,
+            companyId: companyId
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          showResult(
+            `✅ ¡Reporte enviado exitosamente!<br><br>
+            📊 ${data.stats.totalExits} salidas<br>
+            💰 Total: $${data.stats.totalAmount.toLocaleString('es-CL')}<br>
+            📅 ${data.stats.month} ${data.stats.year}<br><br>
+            Revisa tu email: ${email}`,
+            'success'
+          );
+        } else {
+          showResult(`❌ Error: ${data.message || 'No se pudo enviar el reporte'}`, 'error');
+        }
+      } catch (error) {
+        showResult(`❌ Error de conexión: ${error.message}<br><br>Asegúrate de que el servidor esté corriendo en el puerto 3001`, 'error');
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = '📧 Enviar Reporte Mensual';
+      }
+    });
+
+    function showResult(message, type) {
+      resultDiv.innerHTML = message;
+      resultDiv.className = `result ${type}`;
+      resultDiv.style.display = 'block';
+    }
+  </script>
+</body>
+</html>

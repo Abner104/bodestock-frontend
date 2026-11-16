@@ -1,0 +1,145 @@
+// REGLAS DE FIRESTORE ACTUALIZADAS PARA SISTEMA DE INVENTARIOS DINÁMICOS
+//
+// INSTRUCCIONES:
+// 1. Ve a Firebase Console → Firestore Database → Reglas
+// 2. Copia y pega estas reglas en el editor
+// 3. Click en "Publicar"
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper function: verificar si el usuario pertenece a la empresa
+    function belongsToCompany(companyId) {
+      return request.auth != null &&
+             get(/databases/$(database)/documents/companies/$(companyId)/workers/$(request.auth.uid)).data.status == 'active';
+    }
+
+    // Helper function: verificar si el usuario es ADMIN de la empresa
+    function isCompanyAdmin(companyId) {
+      return request.auth != null &&
+             get(/databases/$(database)/documents/companies/$(companyId)/workers/$(request.auth.uid)).data.role == 'ADMIN';
+    }
+
+    // ==========================================
+    // COMPANIES
+    // ==========================================
+    match /companies/{companyId} {
+      // Permitir lectura si pertenece a la empresa
+      allow read: if belongsToCompany(companyId);
+
+      // Solo ADMIN puede actualizar datos de la empresa
+      allow update: if isCompanyAdmin(companyId);
+
+      // ==========================================
+      // INVENTORIES (NUEVO SISTEMA DINÁMICO)
+      // ==========================================
+      match /inventories/{inventoryId} {
+        // Permitir lectura del documento de inventario
+        allow read: if belongsToCompany(companyId);
+
+        // Solo ADMIN puede crear/eliminar inventarios
+        allow create, delete: if isCompanyAdmin(companyId);
+
+        // METADATA: configuración del inventario
+        match /metadata/{metadataId} {
+          allow read: if belongsToCompany(companyId);
+          allow write: if isCompanyAdmin(companyId);
+        }
+
+        // PRODUCTS: productos del inventario
+        match /products/{productId} {
+          allow read: if belongsToCompany(companyId);
+          allow write: if belongsToCompany(companyId);
+        }
+
+        // WAREHOUSES: bodegas del inventario
+        match /warehouses/{warehouseId} {
+          allow read: if belongsToCompany(companyId);
+          allow write: if belongsToCompany(companyId);
+        }
+      }
+
+      // ==========================================
+      // INVENTORY (LEGACY - COMPATIBILIDAD)
+      // ==========================================
+      match /inventory/{itemId} {
+        allow read: if belongsToCompany(companyId);
+        allow write: if belongsToCompany(companyId);
+      }
+
+      // ==========================================
+      // WAREHOUSES (LEGACY - COMPATIBILIDAD)
+      // ==========================================
+      match /warehouses/{warehouseId} {
+        allow read: if belongsToCompany(companyId);
+        allow write: if belongsToCompany(companyId);
+      }
+
+      // ==========================================
+      // INVENTORY EXITS (Salidas de inventario)
+      // ==========================================
+      match /inventory_exits/{exitId} {
+        allow read: if belongsToCompany(companyId);
+        allow write: if belongsToCompany(companyId);
+      }
+
+      // ==========================================
+      // WORKERS (Trabajadores)
+      // ==========================================
+      match /workers/{workerId} {
+        allow read: if belongsToCompany(companyId);
+        allow write: if isCompanyAdmin(companyId);
+      }
+
+      // ==========================================
+      // CUSTOMERS (Clientes)
+      // ==========================================
+      match /customers/{customerId} {
+        allow read: if belongsToCompany(companyId);
+        allow write: if belongsToCompany(companyId);
+      }
+
+      // ==========================================
+      // ORDERS (Pedidos)
+      // ==========================================
+      match /orders/{orderId} {
+        allow read: if belongsToCompany(companyId);
+        allow write: if belongsToCompany(companyId);
+        // Permitir creación pública desde el catálogo
+        allow create: if request.auth == null;
+      }
+
+      // ==========================================
+      // SETTINGS (Configuraciones)
+      // ==========================================
+      match /settings/{settingId} {
+        allow read: if belongsToCompany(companyId);
+        allow write: if isCompanyAdmin(companyId);
+      }
+
+      // ==========================================
+      // NOTIFICATION LOGS
+      // ==========================================
+      match /notificationLogs/{logId} {
+        allow read, write: if isCompanyAdmin(companyId);
+      }
+
+      // ==========================================
+      // PERMISSION REQUESTS (Solicitudes de permisos)
+      // ==========================================
+      match /permissionRequests/{requestId} {
+        allow read: if belongsToCompany(companyId);
+        allow write: if belongsToCompany(companyId);
+      }
+    }
+
+    // ==========================================
+    // USERS (Información pública de usuarios)
+    // ==========================================
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
