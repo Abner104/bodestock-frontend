@@ -33,13 +33,17 @@ export default function VitrinaCard({
   const ppp = product.ppp || 0;
   // precio unitario — MISMA lógica que updateProductQuantity de InventoryExit:
   // elaborado con precioVenta → ese; si hay salePrice > 0 → ese; si no → PPP (costo)
+  // (se prueba también el otro campo de precio: el importador y el modal de
+  // elaborados los guardan por separado)
   const venta =
-    isElaborado && product.precioVenta
+    isElaborado && product.precioVenta > 0
       ? product.precioVenta
       : product.salePrice > 0
       ? product.salePrice
+      : product.precioVenta > 0
+      ? product.precioVenta
       : ppp;
-  const sinPrecioVenta = !(product.salePrice > 0) && !(isElaborado && product.precioVenta);
+  const sinPrecioVenta = !(product.salePrice > 0) && !(product.precioVenta > 0);
   const cat = product.category || 'Producto';
   const c = catColor(cat);
 
@@ -47,8 +51,29 @@ export default function VitrinaCard({
   const single = !photos.length && product.photoURL ? [product.photoURL] : [];
   const allPhotos = photos.length ? photos : single;
 
-  const stockTxt = isOut ? 'agotado' : `${stock} u`;
-  const stockCls = isOut ? 'is-out' : stock < (product.lowStockThreshold ?? 5) ? 'is-lo' : '';
+  // Elaborado: no tiene stock propio, se muestran las porciones que alcanzan
+  // con los insumos (calculadas en InventoryExit.jsx → porcionesDisponibles).
+  const porciones = isElaborado ? product.porcionesDisponibles : undefined;
+  const stockTxt = isElaborado
+    ? porciones == null
+      ? 'según insumos'
+      : porciones <= 0
+      ? 'sin insumos'
+      : `${porciones} porc.`
+    : isOut
+    ? 'agotado'
+    : `${stock} u`;
+  const stockCls = isElaborado
+    ? porciones === 0
+      ? 'is-out'
+      : porciones != null && porciones < 5
+      ? 'is-lo'
+      : ''
+    : isOut
+    ? 'is-out'
+    : stock < (product.lowStockThreshold ?? 5)
+    ? 'is-lo'
+    : '';
 
   const bump = (delta = 1) => {
     const el = cardRef.current;

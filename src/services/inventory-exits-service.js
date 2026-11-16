@@ -88,7 +88,11 @@ export const registerInventoryExit = async (exitData) => {
 
       console.log(`🔍 [Stock] Producto: ${productExit.productName} | tipo: ${productData.productType} | receta items: ${productData.receta?.length ?? 0} | qty: ${productExit.quantity}`);
 
-      if (productData.productType === 'ELABORADO' && productData.receta && productData.receta.length > 0) {
+      // Con receta cuenta como elaborado aunque productType no diga 'ELABORADO'
+      // (mismo criterio que el POS en InventoryExit.jsx); si no, se descontaba el
+      // stock del propio producto y los insumos quedaban intactos.
+      const tieneReceta = Array.isArray(productData.receta) && productData.receta.length > 0;
+      if (tieneReceta) {
         // Producto elaborado: verificar stock de cada insumo de la receta
         for (const ingrediente of productData.receta) {
           const cantidadNecesaria = cantidadRecetaEnUnidadStock(ingrediente) * productExit.quantity;

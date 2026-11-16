@@ -53,12 +53,28 @@ import ComboSaleModal from '../components/pos/ComboSaleModal.jsx';
 import VitrinaGrid from '../components/vitrina/VitrinaGrid.jsx';
 import VitrinaSuggest from '../components/vitrina/VitrinaSuggest.jsx';
 import { usePresence } from '../hooks/usePresence';
+import { convertUnit } from '../utils/unitConversions';
 
 // Helper: determinar si una unidad es de peso/volumen (requiere cantidad decimal)
 const WEIGHT_UNITS = ['kg', 'g', 'gr', 'mg', 'ml', 'l', 'lt', 'lb', 'oz', 'cc'];
 const isWeightUnit = (unit) => {
   if (!unit) return false;
   return WEIGHT_UNITS.includes(unit.toLowerCase().trim());
+};
+
+// Un producto es "elaborado" si está marcado así O tiene receta. Misma regla que
+// usa el servicio de salidas para descontar los insumos (inventory-exits-service.js).
+const isElaboradoProduct = (p) =>
+  p?.productType === 'ELABORADO' || (Array.isArray(p?.receta) && p.receta.length > 0);
+
+// Precio de venta unitario: elaborados usan precioVenta; el resto salePrice.
+// Si falta el principal se prueba el otro campo antes de caer al costo (ppp),
+// porque el importador y el modal de elaborados guardan el precio en campos distintos.
+const getUnitSalePrice = (p) => {
+  if (isElaboradoProduct(p) && p.precioVenta > 0) return p.precioVenta;
+  if (p.salePrice > 0) return p.salePrice;
+  if (p.precioVenta > 0) return p.precioVenta;
+  return p.ppp || 0;
 };
 
 const InventoryExit = () => {
@@ -723,9 +739,7 @@ const InventoryExit = () => {
 
     // Calcular totalValue: si el formato tiene salePrice propio, usarlo;
     // si es elaborado usar precioVenta; si tiene salePrice usar ese; si no, usar ppp (costo)
-    const precioUnitario = product.productType === 'ELABORADO' && product.precioVenta
-      ? product.precioVenta
-      : (product.salePrice > 0 ? product.salePrice : product.ppp);
+    const precioUnitario = getUnitSalePrice(product);
 
     // Aplicar promoción por volumen si corresponde
     const aplicarPromoVolumen = (precio, cantidad, promociones = []) => {
@@ -1191,7 +1205,7 @@ const InventoryExit = () => {
             productName: p.name,
             quantity: p.quantity,
             unit: p.unit,
-            unitValue: p.salePrice > 0 ? p.salePrice : p.ppp,
+            unitValue: getUnitSalePrice(p),
             totalValue: p.totalValue
           })),
           reason: finalReason,
@@ -1238,7 +1252,7 @@ const InventoryExit = () => {
           presentationId: p.selectedPresentationId || null,
           presentationName: p.selectedPresentationName || null,
           unit: p.unit,
-          unitValue: p.productType === 'ELABORADO' ? (p.precioVenta || p.ppp) : (p.salePrice > 0 ? p.salePrice : p.ppp),
+          unitValue: getUnitSalePrice(p),
           totalValue: p.totalValue,
           customFields: p.customFields || {},
           productType: p.productType || 'SIMPLE',
@@ -1246,7 +1260,7 @@ const InventoryExit = () => {
             extras: p.selectedExtras,
             extrasTotal: p.extrasTotal || 0,
           } : {}),
-          ...(p.productType === 'ELABORADO' ? { receta: p.receta || [] } : {})
+          ...(isElaboradoProduct(p) ? { receta: p.receta || [] } : {})
         })),
         totalValue,
         totalProducts,
@@ -1604,6 +1618,26 @@ const InventoryExit = () => {
     });
   }, [warehouseProducts, selectedCategory, searchTerm]);
 
+  // Un elaborado no tiene stock propio (siempre 0): lo que se puede vender
+  // depende de cuántas veces alcanza CADA insumo de la receta (con conversión
+  // de unidad). Se calcula acá para que la tarjeta no muestre "disponible 0 u".
+  const gridItems = useMemo(() => {
+    const stockById = new Map();
+    (allInventoryProducts.length ? allInventoryProducts : warehouseProducts)
+      .forEach((p) => stockById.set(p.id, Number(p.stock) || 0));
+
+    return filteredProducts.map((p) => {
+      if (!isElaboradoProduct(p) || !p.receta?.length) return p;
+      let porciones = Infinity;
+      for (const ing of p.receta) {
+        const necesario = convertUnit(Number(ing.cantidad) || 0, ing.unidad, ing.unidadStock || ing.unidad);
+        if (necesario <= 0) continue;
+        porciones = Math.min(porciones, Math.floor((stockById.get(ing.insumoId) ?? 0) / necesario));
+      }
+      return { ...p, porcionesDisponibles: Number.isFinite(porciones) ? porciones : null };
+    });
+  }, [filteredProducts, allInventoryProducts, warehouseProducts]);
+
   // ===== RENDERS CONDICIONALES =====
   if (loading) {
     return (
@@ -1897,7 +1931,7 @@ const InventoryExit = () => {
           <div className="flex items-center gap-1.5">
             <div className="flex items-center gap-1.5 flex-wrap">
               <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                {formatCLP(product.salePrice > 0 ? product.salePrice : product.ppp)}/{product.unit}
+                {formatCLP(getUnitSalePrice(product))}/{product.unit}
               </p>
               {product.tienePromoActiva && (
                 <span className="text-[10px] font-bold text-orange-500 bg-orange-500/10 border border-orange-500/30 rounded-full px-1.5 py-0.5">
@@ -2229,7 +2263,7 @@ const InventoryExit = () => {
           {/* Products grid — grilla simple, sin carrusel: navbar/buscador/chips quedan fijos
               arriba y solo esta grilla scrollea con la página. */}
           <VitrinaGrid
-            items={filteredProducts}
+            items={gridItems}
             mode="salida"
             loading={loading}
             emptyText="Esta bodega está vacía"
