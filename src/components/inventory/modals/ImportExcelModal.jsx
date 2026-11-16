@@ -2,6 +2,7 @@
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Upload, FileSpreadsheet, AlertCircle, CheckCircle, Download } from "lucide-react";
+import { getMinimarketTemplateRows, MINIMARKET_PRODUCT_COUNT } from "../../../config/minimarket-template";
 
 const ImportExcelModal = ({ isOpen, onClose, onImport, warehouses }) => {
   const [step, setStep] = useState(1); // 1: upload, 2: map, 3: preview
@@ -36,7 +37,8 @@ const ImportExcelModal = ({ isOpen, onClose, onImport, warehouses }) => {
 
   // Sugerencias inteligentes para mapeo automático
   const getSuggestedMapping = (header) => {
-    const h = header.toLowerCase().trim();
+    // Sin tildes: "Categoría" / "Código" deben coincidir con 'categoria' / 'codigo'
+    const h = header.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim();
 
     // Nombre
     if (h.includes('nombre') || h.includes('producto') || h.includes('item') || h.includes('descripcion') || h === 'name' || h === 'product') {
@@ -256,6 +258,17 @@ const ImportExcelModal = ({ isOpen, onClose, onImport, warehouses }) => {
     XLSX.writeFile(workbook, 'plantilla-inventario.xlsx');
   };
 
+  // Catálogo base de minimarket: nombres, categorías y unidades ya cargados;
+  // el usuario completa stock, costo y precio de venta y lo vuelve a importar.
+  const downloadMinimarketTemplate = async () => {
+    const XLSX = await import('xlsx');
+    const worksheet = XLSX.utils.aoa_to_sheet(getMinimarketTemplateRows());
+    worksheet['!cols'] = [{ wch: 34 }, { wch: 12 }, { wch: 20 }, { wch: 10 }, { wch: 8 }, { wch: 13 }, { wch: 13 }, { wch: 18 }];
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Minimarket');
+    XLSX.writeFile(workbook, 'plantilla-minimarket.xlsx');
+  };
+
   if (!isOpen) {
     console.log('⚪ ImportExcelModal: Modal cerrado (isOpen=false)');
     return null;
@@ -392,6 +405,16 @@ const ImportExcelModal = ({ isOpen, onClose, onImport, warehouses }) => {
                     <Download className="w-4 h-4" />
                     Descargar plantilla de ejemplo
                   </button>
+                  <button
+                    onClick={downloadMinimarketTemplate}
+                    className="w-full mt-3 flex items-center justify-center gap-2 px-4 py-3 border border-emerald-200 bg-emerald-50 text-emerald-800 rounded-lg hover:bg-emerald-100 transition text-sm font-medium"
+                  >
+                    <Download className="w-4 h-4" />
+                    Plantilla de minimarket ({MINIMARKET_PRODUCT_COUNT} productos típicos)
+                  </button>
+                  <p className="text-xs text-slate-500 mt-2 text-center">
+                    Ya trae nombres, categorías y unidades. Completa stock, costo y precio de venta, y súbela aquí.
+                  </p>
                 </div>
               </div>
             )}
