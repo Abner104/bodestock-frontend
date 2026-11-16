@@ -217,7 +217,7 @@ export default function VitrinaCard({
 
         {mode === 'inventario' && canSeePrice && (
           <>
-            <span className="vt-disc-chip is-left">{CLP(valorBodega)}</span>
+            <span className="vt-disc-chip is-left">{CLP(isElaborado ? venta : valorBodega)}</span>
             <span className={`vt-disc-chip is-right ${venta - ppp >= 0 ? 'is-pos' : 'is-neg'}`}>{margen}%</span>
           </>
         )}
@@ -246,7 +246,11 @@ export default function VitrinaCard({
           <>
             {canSeePrice && (
               <div className="vt-price">
-                {CLP(valorBodega)} <small>en bodega</small>
+                {isElaborado ? (
+                  <>{CLP(venta)} <small>{sinPrecioVenta ? 'al costo' : 'precio de venta'}</small></>
+                ) : (
+                  <>{CLP(valorBodega)} <small>en bodega</small></>
+                )}
               </div>
             )}
             <div className="vt-facts">

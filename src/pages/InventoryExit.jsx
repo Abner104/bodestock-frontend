@@ -53,7 +53,7 @@ import ComboSaleModal from '../components/pos/ComboSaleModal.jsx';
 import VitrinaGrid from '../components/vitrina/VitrinaGrid.jsx';
 import VitrinaSuggest from '../components/vitrina/VitrinaSuggest.jsx';
 import { usePresence } from '../hooks/usePresence';
-import { convertUnit } from '../utils/unitConversions';
+import { addPorcionesDisponibles } from '../utils/elaboradoStock';
 
 // Helper: determinar si una unidad es de peso/volumen (requiere cantidad decimal)
 const WEIGHT_UNITS = ['kg', 'g', 'gr', 'mg', 'ml', 'l', 'lt', 'lb', 'oz', 'cc'];
@@ -1621,22 +1621,13 @@ const InventoryExit = () => {
   // Un elaborado no tiene stock propio (siempre 0): lo que se puede vender
   // depende de cuántas veces alcanza CADA insumo de la receta (con conversión
   // de unidad). Se calcula acá para que la tarjeta no muestre "disponible 0 u".
-  const gridItems = useMemo(() => {
-    const stockById = new Map();
-    (allInventoryProducts.length ? allInventoryProducts : warehouseProducts)
-      .forEach((p) => stockById.set(p.id, Number(p.stock) || 0));
-
-    return filteredProducts.map((p) => {
-      if (!isElaboradoProduct(p) || !p.receta?.length) return p;
-      let porciones = Infinity;
-      for (const ing of p.receta) {
-        const necesario = convertUnit(Number(ing.cantidad) || 0, ing.unidad, ing.unidadStock || ing.unidad);
-        if (necesario <= 0) continue;
-        porciones = Math.min(porciones, Math.floor((stockById.get(ing.insumoId) ?? 0) / necesario));
-      }
-      return { ...p, porcionesDisponibles: Number.isFinite(porciones) ? porciones : null };
-    });
-  }, [filteredProducts, allInventoryProducts, warehouseProducts]);
+  const gridItems = useMemo(
+    () => addPorcionesDisponibles(
+      filteredProducts,
+      allInventoryProducts.length ? allInventoryProducts : warehouseProducts
+    ),
+    [filteredProducts, allInventoryProducts, warehouseProducts]
+  );
 
   // ===== RENDERS CONDICIONALES =====
   if (loading) {

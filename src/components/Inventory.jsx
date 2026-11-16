@@ -4,7 +4,8 @@
  * Orquesta todos los módulos y componentes del inventario
  */
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { addPorcionesDisponibles } from '../utils/elaboradoStock';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { doc, deleteDoc, addDoc, collection, updateDoc, serverTimestamp, getDoc } from 'firebase/firestore';
@@ -116,6 +117,13 @@ export default function Inventory() {
     uniqueCategories,
     uniqueProviders
   } = useInventoryFilters(items);
+
+  // Los elaborados no tienen stock propio: se calculan las porciones que alcanzan
+  // con el stock de TODOS los insumos del inventario (no solo los de la página).
+  const vitrinaItems = useMemo(
+    () => addPorcionesDisponibles(paginatedItems, items),
+    [paginatedItems, items]
+  );
 
   // Modal states
   const [productModal, setProductModal] = useState({ open: false, product: null, mode: 'create' });
@@ -1281,7 +1289,7 @@ export default function Inventory() {
           <>
             <VitrinaCarousel
               ref={inv_carouselRef}
-              items={paginatedItems}
+              items={vitrinaItems}
               mode="inventario"
               loading={loading}
               canSeePrice
