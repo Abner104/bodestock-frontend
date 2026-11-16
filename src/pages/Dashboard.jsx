@@ -1161,6 +1161,14 @@ const Dashboard = () => {
                     Más Vendidos
                   </h2>
                 </div>
+                <button
+                  onClick={() => navigate('/que-comprar')}
+                  className={`flex items-center gap-1 text-xs font-semibold ${
+                    isDark ? 'text-blue-400' : 'text-blue-600'
+                  }`}
+                >
+                  Qué comprar <ChevronRight className="w-3.5 h-3.5" />
+                </button>
               </div>
 
               {topProducts.length === 0 ? (

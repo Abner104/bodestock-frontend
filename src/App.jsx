@@ -72,6 +72,7 @@ const SuperAdminMapDesigner = lazy(() => import("./pages/SuperAdminMapDesigner")
 const SuperAdminBodestockWorld = lazy(() => import("./pages/SuperAdminBodestockWorld"));
 const SuperAdminCiudad3D = lazy(() => import("./pages/SuperAdminCiudad3D"));
 const MiConsultor = lazy(() => import("./pages/MiConsultor"));
+const QueComprar = lazy(() => import("./pages/QueComprar"));
 const CashRegisterPage = lazy(() => import("./pages/CashRegisterPage"));
 const PurchaseReceiving = lazy(() => import("./pages/PurchaseReceiving"));
 const MisVentas = lazy(() => import("./pages/MisVentas"));
@@ -353,6 +354,13 @@ function App({ darkMode, setDarkMode }) {
               <Route path="/mi-consultor" element={
                 <ProtectedRoute allowedRoles={['ADMIN', 'SUPERVISOR', 'GERENTE']}>
                   <MiConsultor />
+                </ProtectedRoute>
+              } />
+
+              {/* Qué comprar — análisis de ventas e inventario para decidir compras */}
+              <Route path="/que-comprar" element={
+                <ProtectedRoute allowedRoles={['ADMIN', 'SUPERVISOR', 'GERENTE']}>
+                  <QueComprar />
                 </ProtectedRoute>
               } />
 

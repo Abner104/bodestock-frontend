@@ -373,6 +373,7 @@ export default function Navbar() {
     // secundario entre Salidas y Trabajadores.
     ...(hasActiveStore ? [{ label: "Pedidos", icon: FileText, path: "/pedidos", roles: ['ADMIN', 'ENCARGADA', 'VENDEDORA'], badge: pendingOrdersCount }] : []),
     { label: "Reportes", icon: FileText, path: "/historial" },
+    { label: "Qué comprar", icon: ShoppingCart, path: "/que-comprar", roles: ['ADMIN', 'SUPERVISOR', 'GERENTE'] },
     { label: "Caja", icon: CreditCard, path: "/caja", roles: ['ADMIN', 'CAJERA'] },
     { label: "Clientes", icon: Users, path: "/clientes", roles: ['ADMIN', 'SUPERVISOR', 'ENCARGADA', 'GERENTE'] },
     { label: "Costeo", icon: DollarSign, path: "/costeo", adminOnly: true },
