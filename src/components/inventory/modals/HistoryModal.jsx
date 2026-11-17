@@ -4,8 +4,11 @@
  * Incluye filtros por fecha y detalles de cada compra
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { collection, getDocs, limit, orderBy, query } from 'firebase/firestore';
+import { db } from '../../../firebase/firebase';
+import { getUserCompanyId } from '../../../services/companyService';
 import { X as IconX, Clock, History, RotateCcw, PackagePlus, Trash2, ShoppingCart, ArrowDownLeft } from 'lucide-react';
 
 // Movimientos chicos (ej. 0.25 kg de un insumo que se guarda en kg, por una
@@ -40,10 +43,53 @@ export default function HistoryModal({
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
 
+  // Un elaborado no guarda movimientos en su propio documento (no tiene stock:
+  // se prepara al vender y el descuento queda en los insumos). Su historial
+  // son las ventas, que se leen de las salidas de inventario.
+  const isElaborado =
+    item?.productType === 'ELABORADO' || (Array.isArray(item?.receta) && item.receta.length > 0);
+  const [sales, setSales] = useState(null); // null = cargando
+
+  useEffect(() => {
+    if (!isOpen || !isElaborado || !item?.id) return undefined;
+    let cancelled = false;
+    setSales(null);
+    (async () => {
+      try {
+        const companyId = await getUserCompanyId();
+        const snap = await getDocs(
+          query(collection(db, `companies/${companyId}/inventory_exits`), orderBy('createdAt', 'desc'), limit(2000))
+        );
+        const entries = [];
+        snap.docs.forEach((d) => {
+          const e = d.data();
+          if (e.status === 'cancelled') return;
+          const when = e.createdAt?.toDate ? e.createdAt.toDate() : new Date(e.createdAt);
+          (e.products || []).forEach((p, i) => {
+            if (p.productId !== item.id || p.cancelled || p.status === 'cancelled') return;
+            entries.push({
+              id: `${d.id}-${i}`,
+              type: 'exit',
+              date: when.toISOString(),
+              quantity: Number(p.displayQuantity ?? p.quantity) || 0,
+            });
+          });
+        });
+        entries.sort((a, b) => new Date(a.date) - new Date(b.date)); // más viejo primero
+        if (!cancelled) setSales(entries);
+      } catch (err) {
+        console.error('Error cargando ventas del elaborado:', err);
+        if (!cancelled) setSales([]);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [isOpen, isElaborado, item?.id]);
+
   // Filtrar historial por fecha
   const getFilteredHistory = () => {
-    let filteredHistory = Array.isArray(item?.history)
-      ? item.history.filter(h => {
+    const source = isElaborado ? (sales || []) : item?.history;
+    let filteredHistory = Array.isArray(source)
+      ? source.filter(h => {
           // Incluir todo: compras, salidas, anulaciones y mermas
           if (h.type === 'entry' || h.type === 'cancellation') {
             return (h.qty && h.qty > 0) || (h.quantity && h.quantity > 0);
@@ -89,9 +135,11 @@ export default function HistoryModal({
   // evento (incluida una salida/venta), mostrando una cantidad negativa y
   // "$0" de total bajo el label "Último ingreso" (confuso: parecía una
   // compra fallida cuando en realidad era la venta más reciente).
-  const lastPurchase = [...(item?.history || [])]
-    .reverse()
-    .find(h => h.type === 'entry' || h.type === 'purchase' || !h.type);
+  const lastPurchase = isElaborado
+    ? null
+    : [...(item?.history || [])]
+        .reverse()
+        .find(h => h.type === 'entry' || h.type === 'purchase' || !h.type);
 
   return (
     <AnimatePresence>
@@ -116,7 +164,9 @@ export default function HistoryModal({
             <div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4 flex items-center justify-between flex-shrink-0">
               <div className="flex items-center gap-3">
                 <History className="w-6 h-6 text-white" />
-                <h3 className="text-xl font-bold text-white">Historial de Ingresos</h3>
+                <h3 className="text-xl font-bold text-white">
+                  {isElaborado ? 'Historial de Ventas' : 'Historial de Ingresos'}
+                </h3>
               </div>
               <button
                 onClick={onClose}
@@ -132,12 +182,14 @@ export default function HistoryModal({
                 {item?.name}
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm mb-4">
-                <div className="flex justify-between sm:block">
-                  <span className="text-slate-600 dark:text-slate-400">Stock actual:</span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">
-                    {item?.stock ?? 0} {item?.unit}
-                  </span>
-                </div>
+                {!isElaborado && (
+                  <div className="flex justify-between sm:block">
+                    <span className="text-slate-600 dark:text-slate-400">Stock actual:</span>
+                    <span className="font-semibold text-slate-800 dark:text-slate-200">
+                      {item?.stock ?? 0} {item?.unit}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between sm:block">
                   <span className="text-slate-600 dark:text-slate-400">PPP actual:</span>
                   <span className="font-semibold text-slate-800 dark:text-slate-200">
@@ -346,10 +398,18 @@ export default function HistoryModal({
                   <div className="flex flex-col items-center justify-center py-12 text-slate-500 dark:text-slate-400">
                     <Clock className="w-12 h-12 mb-3 text-slate-300 dark:text-slate-600" />
                     <p className="text-sm sm:text-base font-medium mb-1">
-                      {dateFilter !== 'all' ? 'No hay ingresos en este periodo' : 'No hay ingresos registrados'}
+                      {isElaborado && sales === null
+                        ? 'Cargando ventas…'
+                        : isElaborado
+                          ? (dateFilter !== 'all' ? 'No hay ventas en este periodo' : 'Aún no hay ventas de este producto')
+                          : (dateFilter !== 'all' ? 'No hay ingresos en este periodo' : 'No hay ingresos registrados')}
                     </p>
                     <p className="text-xs text-slate-400 dark:text-slate-500">
-                      {dateFilter !== 'all' ? 'Intenta con otro rango de fechas' : 'Los ingresos de mercadería aparecerán aquí'}
+                      {dateFilter !== 'all'
+                        ? 'Intenta con otro rango de fechas'
+                        : isElaborado
+                          ? 'Las ventas aparecerán aquí'
+                          : 'Los ingresos de mercadería aparecerán aquí'}
                     </p>
                   </div>
                 )}

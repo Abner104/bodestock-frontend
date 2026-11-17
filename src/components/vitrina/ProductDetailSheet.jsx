@@ -25,6 +25,7 @@ const ACTIONS = [
     key: 'purchase',
     label: 'Comprar',
     path: 'M9 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z M20 21a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z M1 1h4l2.7 13.4a2 2 0 0 0 2 1.6h9.7a2 2 0 0 0 2-1.6L23 6H6',
+    hideForElaborado: true, // los elaborados se preparan al vender, no se compran
   },
   {
     key: 'history',
@@ -40,6 +41,7 @@ const ACTIONS = [
     key: 'shrinkage',
     label: 'Merma',
     path: 'M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z M12 9v4 M12 17h.01',
+    hideForElaborado: true, // sin stock propio no hay qué dar de baja (la merma va en los insumos)
   },
   {
     key: 'label',
@@ -177,7 +179,9 @@ export default function ProductDetailSheet({
           </div>
 
           <div className="vt-pd-acts">
-            {ACTIONS.filter((a) => !a.onlyWithSku || p.sku || p.code).map((a) => (
+            {ACTIONS.filter(
+              (a) => (!a.onlyWithSku || p.sku || p.code) && !(isElaborado && a.hideForElaborado)
+            ).map((a) => (
               <button
                 key={a.key}
                 type="button"
