@@ -30,6 +30,9 @@ const mapProduct = (d) => ({
   ppp: Number(d.data().ppp) || 0,
   category: d.data().category || '',
   unit: d.data().unit || 'unidades',
+  // Para distinguir platos elaborados (no se compran) de sus insumos (sí)
+  productType: d.data().productType || 'SIMPLE',
+  receta: d.data().receta || [],
 });
 
 export default function QueComprar() {
@@ -294,15 +297,21 @@ export default function QueComprar() {
                         <div className="h-full bg-blue-500" style={{ width: `${Math.min(100, r.share * 2)}%` }} />
                       </div>
                       <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                        {fmtQty(r.qty)} {r.unit} vendidos · {r.share.toFixed(1)}% de las ventas
+                        {fmtQty(r.qty)} {r.unit} {r.directQty > 0 ? 'vendidos' : 'usados en platos'}
+                        {r.directQty > 0 && r.consumedQty > 0 && <> (+{fmtQty(r.consumedQty)} en platos)</>}
+                        {' '}· {r.share.toFixed(1)}% del movimiento
                         {r.marginPct !== null && <> · margen ≈ {Math.round(r.marginPct)}%</>}
                       </p>
                     </div>
-                    <p className="font-black text-sm text-slate-900 dark:text-white shrink-0">{formatCLP(r.revenue)}</p>
+                    <div className="text-right shrink-0">
+                      <p className="font-black text-sm text-slate-900 dark:text-white">{formatCLP(r.value)}</p>
+                      {r.directQty === 0 && <p className="text-[10px] text-slate-400">costo usado</p>}
+                    </div>
                   </div>
                 ))}
                 <p className="text-[11px] text-slate-400 p-3">
-                  A = productos que sostienen el 80% de tus ventas · B = el siguiente 15% · C = el resto.
+                  A = productos que sostienen el 80% del movimiento · B = el siguiente 15% · C = el resto.
+                  Los platos elaborados no aparecen: se cuentan sus insumos según la receta.
                   El margen usa el costo promedio actual del producto, es una estimación.
                 </p>
               </div>
